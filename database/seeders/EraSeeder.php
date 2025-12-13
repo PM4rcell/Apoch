@@ -14,19 +14,19 @@ class EraSeeder extends Seeder
      */
     public function run(): void
     {
-        Era::factory()->create([
+        Era::create([
             'name' => "90s",
             'startYear' => '1990-01-01',
             'endYear' => '2000-01-01',              
             'description' => 'A 90-es évek ikonikus filmjei.',
         ]);
-        Era::factory()->create([
+        Era::create([
             'name' => "00s",
             'startYear' => '2000-01-01',
             'endYear' => '2015-01-01',              
             'description' => 'A 2000-es évek mozifilmjei széles választékban.',
         ]);
-        Era::factory()->create([
+        Era::create([
             'name' => "nowdays",
             'startYear' => '2015-01-01',
             'endYear' => now(),

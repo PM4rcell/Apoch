@@ -11,4 +11,13 @@ class Era extends Model
     /** @use HasFactory<\Database\Factories\EraFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    
+
+    protected $fillable = [
+        'name',
+        'startYear',
+        'endYear',
+        'description',
+    ];
 }

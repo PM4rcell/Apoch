@@ -18,7 +18,7 @@ class CinemaFactory extends Factory
     public function definition(): array
     {
         return [
-            'era_id' => Era::factory(),
+            'era_id' => Era::query()->inRandomOrder()->first()->id,
             'name' => fake()->word(),
             'city' =>fake()->city(),
             'address' =>fake()->address(),

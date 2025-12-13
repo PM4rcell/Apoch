@@ -11,7 +11,7 @@ class UpdateEraRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->role === 'admin';        
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateEraRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'startYear' => 'required|date',
+            'endYear' => 'required|date|after_or_equal:startYear',
+            'description' => 'required|string',
         ];
     }
 }

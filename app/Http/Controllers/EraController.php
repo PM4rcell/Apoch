@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Era;
 use App\Http\Requests\StoreEraRequest;
 use App\Http\Requests\UpdateEraRequest;
+use App\Http\Resources\EraResource;
 
 class EraController extends Controller
 {
@@ -13,15 +14,7 @@ class EraController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return  EraResource::collection(Era::all());
     }
 
     /**
@@ -29,7 +22,8 @@ class EraController extends Controller
      */
     public function store(StoreEraRequest $request)
     {
-        //
+        $era = Era::create($request->validated());
+        return new EraResource($era);
     }
 
     /**
@@ -37,15 +31,7 @@ class EraController extends Controller
      */
     public function show(Era $era)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Era $era)
-    {
-        //
+        return new EraResource($era);
     }
 
     /**
@@ -53,7 +39,8 @@ class EraController extends Controller
      */
     public function update(UpdateEraRequest $request, Era $era)
     {
-        //
+        $era->update($request->validated());
+        return new EraResource($era);
     }
 
     /**
@@ -61,6 +48,7 @@ class EraController extends Controller
      */
     public function destroy(Era $era)
     {
-        //
+        $era->delete();
+        return response()->noContent();
     }
 }
