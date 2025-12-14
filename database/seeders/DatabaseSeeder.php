@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Media;
+use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,6 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            MediaSeeder::class,
             EraSeeder::class,
             PasswordSeeder::class,
             ProfileSeeder::class,
@@ -26,6 +29,7 @@ class DatabaseSeeder extends Seeder
             GenreSeeder::class,
             CastMemberSeeder::class,
             MovieSeeder::class,
+            MovieCastSeeder::class,
             MovieGenreSeeder::class,
             LanguageSeeder::class,
             ScreeningSeeder::class,

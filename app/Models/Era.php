@@ -12,12 +12,16 @@ class Era extends Model
     use HasFactory;
     use SoftDeletes;
 
-    
-
     protected $fillable = [
         'name',
         'startYear',
         'endYear',
         'description',
     ];
+
+    public function poster(){
+        return $this->hasOne(Media::class, 'connected_id', 'id')
+            ->where('connected_table', 'eras')
+            ->where('media_type', 'poster');
+    }
 }

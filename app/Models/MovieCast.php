@@ -11,4 +11,5 @@ class MovieCast extends Model
     /** @use HasFactory<\Database\Factories\MovieCastFactory> */
     use HasFactory;
     use SoftDeletes;
+
 }

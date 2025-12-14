@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
+use App\Http\Resources\NewsResource;
 
 class NewsController extends Controller
 {
@@ -13,15 +14,8 @@ class NewsController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $news = News::latest()->paginate(10);
+        return NewsResource::collection($news);
     }
 
     /**
@@ -29,7 +23,8 @@ class NewsController extends Controller
      */
     public function store(StoreNewsRequest $request)
     {
-        //
+        $news = News::create($request->validated());
+        return new NewsResource($news);
     }
 
     /**
@@ -37,15 +32,8 @@ class NewsController extends Controller
      */
     public function show(News $news)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(News $news)
-    {
-        //
+        $news->load('user');
+        return new NewsResource($news);
     }
 
     /**
@@ -53,7 +41,8 @@ class NewsController extends Controller
      */
     public function update(UpdateNewsRequest $request, News $news)
     {
-        //
+        $news->update($request->validated());
+        return new NewsResource($news);
     }
 
     /**
@@ -61,6 +50,7 @@ class NewsController extends Controller
      */
     public function destroy(News $news)
     {
-        //
+        $news->delete();
+        return response()->noContent();
     }
 }

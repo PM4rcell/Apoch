@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class NewsFactory extends Factory
     {
         $title = fake()->words(5, true);
         return [
-            'profile_id' => Profile::query()->inRandomOrder()->first()->id,
+            'user_id' => User::query()->inRandomOrder()->first()->id,
             'title' => $title,
             'slug' => str($title)->slug(),
             'category' => fake()->randomElement(['Announcement', 'Review', 'Events', 'Behind the scenes']),

@@ -31,6 +31,7 @@ class EraController extends Controller
      */
     public function show(Era $era)
     {
+        $era->load('poster');
         return new EraResource($era);
     }
 
