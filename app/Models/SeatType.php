@@ -11,4 +11,11 @@ class SeatType extends Model
     /** @use HasFactory<\Database\Factories\SeatTypeFactory> */
     use HasFactory;
     use SoftDeletes;
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+    public function seats(){
+        return $this->hasMany(Seat::class);
+    }
 }

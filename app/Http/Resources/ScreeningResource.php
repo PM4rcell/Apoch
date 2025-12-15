@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EraResource extends JsonResource
+class ScreeningResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,10 @@ class EraResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'startYear' => $this->startYear,
-            'endYear' => $this->endYear,
-            'description' => $this->description,
-            'poster'=> PosterResource::make($this->whenLoaded('poster')),
+            'auditorium' => new AuditoriumResource($this->whenLoaded('auditorium')),
+            'movie' => new MovieSummaryResource($this->whenLoaded('movie')),
+            'language' => new LanguageResource($this->whenLoaded('language')),
+            'start_time' => $this->start_time,
         ];
     }
 }

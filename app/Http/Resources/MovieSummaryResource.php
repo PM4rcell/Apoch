@@ -16,6 +16,7 @@ class MovieSummaryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'era' => new EraResource($this->whenLoaded('era')),
             'title' => $this->title,            
             'release_date' => $this->release_date,
             'vote_avg' => $this->vote_avg,

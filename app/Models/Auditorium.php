@@ -11,4 +11,18 @@ class Auditorium extends Model
     /** @use HasFactory<\Database\Factories\AuditoriumFactory> */
     use HasFactory;
     use SoftDeletes;
+    protected $fillable = [
+        'name',
+        'cinema_id',
+        'seating_capacity',
+    ];
+    public function screenings(){
+        return $this->hasMany(Screening::class);
+    }
+    public function cinema(){
+        return $this->belongsTo(Cinema::class);
+    }
+    public function seats(){
+        return $this->hasMany(Seat::class);
+    }
 }

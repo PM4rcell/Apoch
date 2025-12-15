@@ -11,7 +11,8 @@ class UpdateScreeningRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        //return $this->user()->role === 'admin';
+        return true;
     }
 
     /**
@@ -22,7 +23,10 @@ class UpdateScreeningRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'auditorium_id' => ['sometimes', 'exists:auditoria,id'],
+            'movie_id' => ['sometimes', 'exists:movies,id'],
+            'language' => ['sometimes', 'string', 'max:50'],
+            'start_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],
         ];
     }
 }

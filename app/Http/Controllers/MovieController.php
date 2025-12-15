@@ -48,20 +48,22 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-        $data = $request->validated();
-        $era_id = Era::where('name', $data['era'])->first()->id;
+        $data = $request->validated();        
 
-        $director = Director::firstOrCreate([
-            'name' => $data['director'],
-        ]);
+        if (isset($data['director'])) {
+            $director = Director::firstOrCreate([
+                'name' => $data['director'],
+            ]);
+            $data['director_id'] = $director->id;
+        }
 
         $movie = Movie::create([
             'title' => $data['title'],
             'slug' => str($data['title'])->slug(),
             'description' => $data['description'],
             'release_date' => $data['release_date'],
-            'director_id' => $director->id,
-            'era_id' => $era_id,
+            'director_id' => $data['director_id'],
+            'era_id' => $data['era_id'],
             'vote_avg' => $data['vote_avg'] ?? 1,
             'imdb_id' => $data['imdb_id'] ?? 0,
             'age_rating' => $data['age_rating'] ?? "NR",
@@ -76,9 +78,7 @@ class MovieController extends Controller
             $genreIds[] = $genre->id;
         }
         $movie->genres()->sync($genreIds);
-
-
-        $castData = $data['cast'];
+        
         $pivotData = [];
         foreach ($data['cast'] as $castMember) {
             $cast = CastMember::firstOrCreate(['name' => $castMember['name']]);
@@ -108,33 +108,17 @@ class MovieController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateMovieRequest $request, Movie $movie)
-    {        
-        $data = $request->validated();        
+    {                
+        $data = $request->validated();         
+            
         if (isset($data['director'])) {
             $director = Director::firstOrCreate([
                 'name' => $data['director'],
             ]);
             $data['director_id'] = $director->id;
         }
-        if (isset($data['era'])) {
-            $era = Era::firstOrCreate([
-                'name' => $data['era'],
-            ]);
-            $data['era_id'] = $era->id;
-        }        
-        $movie->update([
-        'title'        => $data['title']        ?? $movie->title,
-        'description'  => $data['description']  ?? $movie->description,
-        'release_date' => $data['release_date'] ?? $movie->release_date,
-        'era_id'       => $data['era_id']       ?? $movie->era_id,
-        'director_id'  => $data['director_id']  ?? $movie->director_id,
-        'vote_avg'     => $data['vote_avg']     ?? $movie->vote_avg,
-        'imdb_id'      => $data['imdb_id']      ?? $movie->imdb_id,
-        'age_rating'   => $data['age_rating']   ?? $movie->age_rating,
-        'runtime_min'  => $data['runtime_min']  ?? $movie->runtime_min,
-        'trailer_link' => $data['trailer_link'] ?? $movie->trailer_link,
-        'omdb_category'=> $data['omdb_category']?? $movie->omdb_category,
-    ]);
+        $movie->update($data);
+    
 
     if (array_key_exists('genres', $data)) {
         $genreIds = [];

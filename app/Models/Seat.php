@@ -11,4 +11,17 @@ class Seat extends Model
     /** @use HasFactory<\Database\Factories\SeatFactory> */
     use HasFactory;
     use SoftDeletes;
+    protected $fillable = [
+        'auditorium_id',
+        'row',
+        'seat_type_id',
+        'number',        
+    ];
+    public function auditorium(){
+        return $this->belongsTo(Auditorium::class);
+    }
+    public function seatType(){
+        return $this->belongsTo(SeatType::class);
+    }
+    
 }
