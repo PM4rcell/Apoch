@@ -28,7 +28,7 @@ class Movie extends Model
         'slug',
         'trailer_link',
     ];
-
+    
     public function era()
     {
         return $this->belongsTo(Era::class);
@@ -39,9 +39,8 @@ class Movie extends Model
     }
     public function poster()
     {
-        return $this->hasOne(Media::class, 'connected_id', 'id')
-            ->where('connected_table', 'movies')
-            ->where('media_type', 'poster');
+        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        ->where('media_type', 'poster');
     }
     public function gallery()
     {

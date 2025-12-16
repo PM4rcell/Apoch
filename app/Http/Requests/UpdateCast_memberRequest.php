@@ -11,7 +11,8 @@ class UpdateCast_memberRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        //return $this->user()->role === 'admin';
+        return true;
     }
 
     /**
@@ -22,7 +23,10 @@ class UpdateCast_memberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+
+            'omdb_poster_url' => ['sometimes', 'url'],
+            'poster_file'     => ['sometimes', 'image', 'max:4096'], 
         ];
     }
 }

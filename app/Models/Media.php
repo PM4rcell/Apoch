@@ -18,4 +18,9 @@ class Media extends Model
         'media_type',
         'path',
     ];
+
+    public function connected()
+    {
+        return $this->morphTo(__FUNCTION__, 'connected_table', 'connected_id');
+    }
 }

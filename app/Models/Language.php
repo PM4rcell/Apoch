@@ -13,6 +13,7 @@ class Language extends Model
     use SoftDeletes;
     protected $fillable = [
         'name',
+        'description',
     ];
     public function screenings()
     {

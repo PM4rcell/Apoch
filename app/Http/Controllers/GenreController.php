@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GenreResource;
 use App\Models\Genre;
 use App\Http\Requests\StoreGenreRequest;
 use App\Http\Requests\UpdateGenreRequest;
@@ -13,15 +14,8 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $genres = Genre::all();
+        return GenreResource::collection($genres);
     }
 
     /**
@@ -29,7 +23,8 @@ class GenreController extends Controller
      */
     public function store(StoreGenreRequest $request)
     {
-        //
+        $genre = Genre::create($request->validated());
+        return new GenreResource($genre);
     }
 
     /**
@@ -37,23 +32,16 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Genre $genre)
-    {
-        //
-    }
+        return new GenreResource($genre);
+    }    
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateGenreRequest $request, Genre $genre)
     {
-        //
+        $genre->update($request->validated());
+        return new GenreResource($genre);
     }
 
     /**
@@ -61,6 +49,7 @@ class GenreController extends Controller
      */
     public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+        return response()->noContent();
     }
 }

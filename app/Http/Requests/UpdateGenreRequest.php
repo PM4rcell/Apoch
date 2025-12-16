@@ -11,7 +11,8 @@ class UpdateGenreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->role === 'admin';
+        // return true;
     }
 
     /**
@@ -22,7 +23,7 @@ class UpdateGenreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:50|unique:genres,name',
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Screening;
 use App\Http\Requests\StoreScreeningRequest;
 use App\Http\Requests\UpdateScreeningRequest;
 use App\Http\Resources\ScreeningResource;
+use App\Http\Resources\SeatResource;
 use App\Models\Language;
 use Illuminate\Support\Facades\Lang;
 
@@ -25,7 +26,16 @@ class ScreeningController extends Controller
         ]);   
         
         if (request()->filled('era_id')) {
-            $screenings->where('era_id', request()->input('era_id'));
+            $eraId = request()->input('era_id');
+            $screenings->whereHas('movie', function ($query) use ($eraId) {
+                $query->where('era_id', $eraId);
+            });
+        }
+        if (request()->filled('movie_id')) {
+            $screenings->where('movie_id', request()->input('movie_id'));
+        }
+        if (request()->filled('date')) {
+            $screenings->where('start_time', request()->input('date'));
         }
         return ScreeningResource::collection($screenings->paginate(10));
     }
@@ -102,7 +112,7 @@ class ScreeningController extends Controller
         return response()->json([
             'screening_id' => $screening->id,
             'auditorium_id' => $screening->auditorium->id,
-            'seats' => $seats,
+            'seats' => SeatResource::collection($seats),
         ]);
     }
 }

@@ -14,6 +14,7 @@ use App\Models\Genre;
 use App\Models\Media;
 use App\Models\MovieCast;
 use App\Models\MovieGenre;
+use App\Services\MediaService;
 use Psy\Util\Str;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -46,7 +47,7 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMovieRequest $request)
+    public function store(StoreMovieRequest $request, MediaService $mediaService)
     {
         $data = $request->validated();        
 
@@ -86,7 +87,9 @@ class MovieController extends Controller
         }
         $movie->cast()->sync($pivotData);
 
-        $this->storeMoviePoster($movie, $data['omdb_poster_url'] ?? null, $request->file('poster_file'));
+        
+        $mediaService->storePoster($movie, $data['omdb_poster_url'] ?? null, $request->file('poster_file'));
+
         if ($request->hasFile('gallery')) {
             $this->storeMovieGallery($movie, $request->file('gallery'));
         }
@@ -155,37 +158,21 @@ class MovieController extends Controller
         return response()->noContent();
     }
 
-    private function storeMoviePoster($movie, ?string $omdbPosterUrl, $uploadedFile)
+    public function getSimilarMovies($id)
     {
-        $movie->poster()->delete();
+        $movie = Movie::findOrFail($id);
+        $genres = $movie->genres()->pluck('genres.id')->toArray();
 
-        if ($uploadedFile) {
+        $similarMovies = Movie::whereHas('genres', function ($query) use ($genres) {
+            $query->whereIn('genres.id', $genres);
+        })
+        ->where('id', '!=', $movie->id)
+        ->with(['poster', 'era'])
+        ->distinct()
+        ->take(5)
+        ->get();
 
-            $originalName = $uploadedFile->getClientOriginalName();
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9-_\.]/', '_',
-            pathinfo($originalName, PATHINFO_FILENAME));
-            $extension = $uploadedFile->getClientOriginalExtension();
-
-            $safeName = $sanitizedName . '_' . uniqid() . '.' . $extension;
-            $path = $uploadedFile->storeAs('images/movies/'. $movie->slug, $safeName, 'public');
-            Media::create([
-                'text' => $movie->slug . ' Poster' . $extension,
-                'connected_table' => 'movies',
-                'connected_id' => $movie->id,
-                'media_type' => 'poster',
-                'path' => $path,
-            ]);
-        }
-
-        if ($omdbPosterUrl) {
-            Media::create([
-                'text' => $movie->slug . ' Poster' . '.jpg',
-                'connected_table' => 'movies',
-                'connected_id' => $movie->id,
-                'media_type' => 'poster',
-                'path' => $omdbPosterUrl,
-            ]);
-        }
+        return MovieSummaryResource::collection($similarMovies);
     }
 
     private function storeMovieGallery($movie, $uploadedFiles = [])

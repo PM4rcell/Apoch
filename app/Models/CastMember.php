@@ -14,12 +14,16 @@ class CastMember extends Model
     
     protected $fillable = [
         'name',
-        'role',
     ];
 
     public function movies()
     {
         return $this->belongsToMany(Movie::class, 'movie_cast');
+    }
+    public function poster()
+    {
+        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        ->where('media_type', 'poster');
     }
 }
 
