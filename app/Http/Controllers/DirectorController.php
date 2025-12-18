@@ -27,8 +27,11 @@ class DirectorController extends Controller
     {
         $data = $request->validated();
         $director = Director::create($data);
-        if ($request->hasFile('poster_file')) {
-            $mediaService->storePoster($director, null, $request->file('poster_file'));
+        
+         if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($director, $data['external_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($director, $request->file('poster_file'));
         }
          $director->load('poster');
         return new DirectorResource($director);
@@ -50,8 +53,11 @@ class DirectorController extends Controller
     {
         $data = $request->validated();
         $director->update($data);
-        if ($request->hasFile('poster_file')) {
-            $mediaService->storePoster($director, null, $request->file('poster_file'));
+        
+        if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($director, $data['external_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($director, $request->file('poster_file'));
         }
         $director->load('poster');
         return new DirectorResource($director);

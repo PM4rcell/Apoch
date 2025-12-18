@@ -22,7 +22,14 @@ class StoreAchievementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255|unique:achievements,name',
+            'description' => 'required|string',
+            'type' => 'required|string',
+            'points' => 'required|int|max:9999',
+            'year' => 'required|int',
+
+            'external_url' => ['nullable', 'url'],
+            'poster_file'     => ['nullable', 'image', 'max:4096'], 
         ];
     }
 }

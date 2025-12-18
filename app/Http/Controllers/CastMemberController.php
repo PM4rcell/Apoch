@@ -26,10 +26,15 @@ class CastMemberController extends Controller
     public function store(StoreCast_memberRequest $request, MediaService $mediaService)
     {
         $data = $request->validated();
-        $castMember = CastMember::create($data);        
-        $mediaService->storePoster($castMember,null,  $request->file('poster_file'));
-
-         $castMember->load('poster'); // Add this
+        $castMember = CastMember::create($data);                
+        
+        if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($castMember, $data['external_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($castMember, $request->file('poster_file'));
+        }
+        
+         $castMember->load('poster');
         return new CastMemberResource($castMember->fresh());        
     }
 

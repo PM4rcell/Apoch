@@ -24,7 +24,7 @@ class UpdateCast_memberRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
 
-            'omdb_poster_url' => ['sometimes', 'url'],
+            'external_url' => ['sometimes', 'url'],
             'poster_file'     => ['sometimes', 'image', 'max:4096'], 
         ];
     }

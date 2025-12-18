@@ -11,4 +11,17 @@ class Achievement extends Model
     /** @use HasFactory<\Database\Factories\AchievementFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'type',
+        'points',
+        'year'
+    ];
+    public function poster()
+    {
+        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        ->where('media_type', 'poster');
+    }
 }

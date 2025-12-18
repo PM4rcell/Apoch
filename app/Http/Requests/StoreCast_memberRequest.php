@@ -23,7 +23,7 @@ class StoreCast_memberRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'omdb_poster_url' => ['nullable', 'url'],
+            'external_url' => ['nullable', 'url'],
             'poster_file'     => ['nullable', 'image', 'max:4096'],             
         ];
     }

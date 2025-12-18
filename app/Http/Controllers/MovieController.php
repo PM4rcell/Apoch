@@ -15,6 +15,7 @@ use App\Models\Media;
 use App\Models\MovieCast;
 use App\Models\MovieGenre;
 use App\Services\MediaService;
+use GuzzleHttp\Psr7\UploadedFile;
 use Psy\Util\Str;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -49,8 +50,10 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request, MediaService $mediaService)
     {
+        //validate
         $data = $request->validated();        
 
+        //find or create director
         if (isset($data['director'])) {
             $director = Director::firstOrCreate([
                 'name' => $data['director'],
@@ -58,6 +61,7 @@ class MovieController extends Controller
             $data['director_id'] = $director->id;
         }
 
+        //crete movie
         $movie = Movie::create([
             'title' => $data['title'],
             'slug' => str($data['title'])->slug(),
@@ -73,6 +77,7 @@ class MovieController extends Controller
             'omdb_category' => 'movie',
         ]);
 
+        //find or create genres, cast
         $genreIds = [];
         foreach ($data['genres'] as $genre) {
             $genre = Genre::firstOrCreate(['name' => $genre]);
@@ -87,13 +92,30 @@ class MovieController extends Controller
         }
         $movie->cast()->sync($pivotData);
 
-        
-        $mediaService->storePoster($movie, $data['omdb_poster_url'] ?? null, $request->file('poster_file'));
+        //store poster    
+        if (!empty($data['omdb_poster_url'])) {
+            $mediaService->storeExternalPoster($movie, $data['omdb_poster_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($movie, $request->file('poster_file'));
+        }        
 
-        if ($request->hasFile('gallery')) {
-            $this->storeMovieGallery($movie, $request->file('gallery'));
+        //store images
+        $gallery = $request->input('gallery', []);
+        $galleryFiles = $request->file('gallery', []);
+
+        foreach ($gallery as $index => $item) {
+            if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
+                $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
+                continue;
+            }
+
+            if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
+                $mediaService->storeExternalMedia($movie, $item);
+                continue;
+            }
         }
 
+        //return movie
         $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']);
         return new MovieDetailResource($movie);
     }
@@ -173,20 +195,5 @@ class MovieController extends Controller
         ->get();
 
         return MovieSummaryResource::collection($similarMovies);
-    }
-
-    private function storeMovieGallery($movie, $uploadedFiles = [])
-    {
-        $extension = ".jpg";
-        foreach ($uploadedFiles as $file) {
-            $path = $file->store('images/movies/'. $movie->slug, 'public');
-            Media::create([
-                'text' => $movie->slug . ' Image' . uniqid() . $extension,
-                'connected_table' => 'movies',
-                'connected_id' => $movie->id,
-                'media_type' => 'image',
-                'path' => $path,
-            ]);
-        }
-    }
+    }    
 }

@@ -44,8 +44,8 @@ class Movie extends Model
     }
     public function gallery()
     {
-        return $this->hasMany(Media::class, 'connected_id', 'id')
-            ->where('connected_table', 'movies');            
+        return $this->morphMany(Media::class, 'connected', 'connected_table', 'connected_id')
+            ->where('media_type', 'image');            
     }
     public function cast()
     {

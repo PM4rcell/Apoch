@@ -23,6 +23,7 @@ class UpdateDirectorRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:directors,name,',
+            'external_url' => 'nullable|url',
             'poster_file' => 'nullable|image|max:2048',
         ];
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AuditoriumController;
 use App\Http\Controllers\CastMemberController;
 use App\Http\Controllers\CinemaController;
@@ -46,6 +47,8 @@ Route::apiResource('languages', LanguageController::class)->only(['index', 'show
 Route::apiResource('castMembers', CastMemberController::class)->only(['index', 'show']);
 // Directors
 Route::apiResource('directors', DirectorController::class)->only(['index', 'show']);
+// Achievements
+Route::apiResource('achievements', AchievementController::class)->only(['index', 'show']);
 
 //// Admin routes ////
 
@@ -72,6 +75,8 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('directors', DirectorController::class)->except(['index', 'show']);
     // Users
     Route::patch('users/{id}/role', [UserRoleController::class, 'update']);
+    // Achievements
+    Route::apiResource('achievements', AchievementController::class)->except(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';

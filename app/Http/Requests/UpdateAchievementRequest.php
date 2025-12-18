@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAchievementRequest extends FormRequest
 {
@@ -21,8 +22,21 @@ class UpdateAchievementRequest extends FormRequest
      */
     public function rules(): array
     {
+         $achievement = $this->route('achievement');
         return [
-            //
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('achievements', 'name')->ignore($achievement->id),
+            ],
+            'description' => 'required|string',
+            'type' => 'required|string',
+            'points' => 'required|int|max:9999',
+            'year' => 'required|int',
+
+            'external_url' => ['nullable', 'url'],
+            'poster_file'     => ['nullable', 'image', 'max:4096'], 
         ];
     }
 }
