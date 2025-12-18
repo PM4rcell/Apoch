@@ -45,7 +45,8 @@ class DatabaseSeeder extends Seeder
             CommentSeeder::class,
             NewsSeeder::class,
             ProfileAchievementSeeder::class,
-            ProfileWatchlistSeeder::class
+            ProfileWatchlistSeeder::class,
+            AdminUserSeeder::class
         ]);
     }
 }

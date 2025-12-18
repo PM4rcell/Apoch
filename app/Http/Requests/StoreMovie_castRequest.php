@@ -11,7 +11,7 @@ class StoreMovie_castRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->isAdmin();   
     }
 
     /**

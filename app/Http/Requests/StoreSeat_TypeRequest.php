@@ -11,7 +11,7 @@ class StoreSeat_TypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->isAdmin();   
     }
 
     /**

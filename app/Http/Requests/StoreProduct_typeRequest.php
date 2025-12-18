@@ -11,7 +11,7 @@ class StoreProduct_typeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->isAdmin();   
     }
 
     /**

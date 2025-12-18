@@ -11,8 +11,7 @@ class StoreAuditoriumRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //return $this->user()->can('is-admin');
-        return true;
+        return $this->user()->isAdmin();        
     }
 
     /**

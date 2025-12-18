@@ -3,17 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use SoftDeletes;
+    use SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -21,9 +24,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
-        'password',
+        'password_id',
+        'profile_id'
     ];
 
     /**
@@ -31,8 +35,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
+    protected $hidden = [        
         'remember_token',
     ];
 
@@ -44,18 +47,30 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime',            
         ];
     }
 
     public function profile()
     {
-        return $this->hasOne(Profile::class);
+        return $this->belongsTo(Profile::class);
+    }
+    public function password()
+    {
+        return $this->belongsTo(Password::class);
     }
 
      public function news(): HasMany
     {
         return $this->hasMany(News::class);
+    }
+
+    public function getAuthPassword()
+    {
+        return optional($this->password)->password_hash;
+    }
+
+    public function isAdmin(){
+        return $this->profile?->role === Role::ADMIN;
     }
 }

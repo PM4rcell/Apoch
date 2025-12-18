@@ -10,12 +10,17 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\UserRoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
+
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
 
 //// Public routes ////
 
@@ -44,7 +49,7 @@ Route::apiResource('directors', DirectorController::class)->only(['index', 'show
 
 //// Admin routes ////
 
-Route::middleware(['auth:sanctum', 'can:is-admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     // Eras
     Route::apiResource('eras', EraController::class)->except(['index', 'show']);    
     // Cinemas
@@ -65,4 +70,8 @@ Route::middleware(['auth:sanctum', 'can:is-admin'])->prefix('admin')->group(func
     Route::apiResource('castMembers', CastMemberController::class)->except(['index', 'show']);   
     // Directors
     Route::apiResource('directors', DirectorController::class)->except(['index', 'show']);
+    // Users
+    Route::patch('users/{id}/role', [UserRoleController::class, 'update']);
 });
+
+require __DIR__.'/auth.php';
