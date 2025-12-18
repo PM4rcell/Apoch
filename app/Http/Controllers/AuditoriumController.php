@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CinemaResource;
 use App\Models\Auditorium;
 use App\Http\Requests\StoreAuditoriumRequest;
 use App\Http\Requests\UpdateAuditoriumRequest;
+use App\Http\Resources\AuditoriumResource;
 
 class AuditoriumController extends Controller
 {
@@ -13,15 +15,8 @@ class AuditoriumController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $auditoriums = Auditorium::query()->with('cinema')->paginate(15);
+        return AuditoriumResource::collection($auditoriums);
     }
 
     /**
@@ -29,7 +24,9 @@ class AuditoriumController extends Controller
      */
     public function store(StoreAuditoriumRequest $request)
     {
-        //
+        $data = $request->validated();
+        $auditorium = Auditorium::create($data);
+        return new AuditoriumResource($auditorium);
     }
 
     /**
@@ -37,15 +34,16 @@ class AuditoriumController extends Controller
      */
     public function show(Auditorium $auditorium)
     {
-        //
-    }
+        $auditorium->load([             
+            'cinema', 
+            'seats',
+            'screenings' => function ($q) {
+            $q->where('start_time', '>=', now())
+              ->orderBy('start_time');
+            },
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Auditorium $auditorium)
-    {
-        //
+        return new AuditoriumResource($auditorium);
     }
 
     /**
@@ -53,7 +51,10 @@ class AuditoriumController extends Controller
      */
     public function update(UpdateAuditoriumRequest $request, Auditorium $auditorium)
     {
-        //
+        $data = $request->validated();
+        $auditorium->update($data);
+        $auditorium->load('screenings', 'cinema', 'seats');
+        return new AuditoriumResource($auditorium);
     }
 
     /**
@@ -61,6 +62,7 @@ class AuditoriumController extends Controller
      */
     public function destroy(Auditorium $auditorium)
     {
-        //
+        $auditorium->delete();
+        return response()->noContent();
     }
 }

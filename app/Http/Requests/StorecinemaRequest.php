@@ -11,7 +11,8 @@ class StorecinemaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        //return $this->user()->role === 'admin';
+        return true;
     }
 
     /**
@@ -22,7 +23,10 @@ class StorecinemaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'era_id' => 'required|exists:eras,id',
+            'name' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
         ];
     }
 }

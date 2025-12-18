@@ -11,7 +11,7 @@ class UpdateAuditoriumRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateAuditoriumRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'sometimes|required|string|max:255',
+            'cinema_id' => 'sometimes|required|exists:cinemas,id',
+            'capacity' => 'sometimes|required|integer|min:1',
         ];
     }
 }

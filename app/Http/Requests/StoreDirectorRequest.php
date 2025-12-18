@@ -11,7 +11,8 @@ class StoreDirectorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // return $this->user()->role === 'admin';
+        return true;
     }
 
     /**
@@ -22,7 +23,8 @@ class StoreDirectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255|unique:directors,name',
+            'poster_file' => 'nullable|image|max:2048',
         ];
     }
 }

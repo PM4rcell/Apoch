@@ -14,7 +14,7 @@ class Auditorium extends Model
     protected $fillable = [
         'name',
         'cinema_id',
-        'seating_capacity',
+        'capacity',
     ];
     public function screenings(){
         return $this->hasMany(Screening::class);

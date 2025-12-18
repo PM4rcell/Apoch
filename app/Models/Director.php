@@ -20,4 +20,9 @@ class Director extends Model
     {
         return $this->hasMany(Movie::class);
     }
+    public function poster()
+    {
+        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        ->where('media_type', 'poster');
+    }
 }

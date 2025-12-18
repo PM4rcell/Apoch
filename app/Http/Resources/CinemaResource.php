@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuditoriumResource extends JsonResource
+class CinemaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,9 @@ class AuditoriumResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'cinema' => new CinemaResource($this->whenLoaded('cinema')),
-            'capacity' => $this->capacity,
-            'seats' => SeatResource::collection($this->whenLoaded('seats')),
-            'screenings' => ScreeningResource::collection($this->whenLoaded('screenings'))
+            'era_id' => $this->era_id,
+            'city' => $this->city,
+            'address' => $this->address,
         ];
     }
 }

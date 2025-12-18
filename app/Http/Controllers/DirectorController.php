@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DirectorResource;
 use App\Models\Director;
 use App\Http\Requests\StoreDirectorRequest;
 use App\Http\Requests\UpdateDirectorRequest;
+use App\Services\MediaService;
 
 class DirectorController extends Controller
 {
@@ -13,23 +15,23 @@ class DirectorController extends Controller
      */
     public function index()
     {
-        //
+        $directors = Director::paginate(15);
+        return DirectorResource::collection($directors);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDirectorRequest $request)
+    public function store(StoreDirectorRequest $request, MediaService $mediaService)
     {
-        //
+        $data = $request->validated();
+        $director = Director::create($data);
+        if ($request->hasFile('poster_file')) {
+            $mediaService->storePoster($director, null, $request->file('poster_file'));
+        }
+         $director->load('poster');
+        return new DirectorResource($director);
     }
 
     /**
@@ -37,23 +39,22 @@ class DirectorController extends Controller
      */
     public function show(Director $director)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Director $director)
-    {
-        //
+        $director->load('movies');
+        return new DirectorResource($director);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDirectorRequest $request, Director $director)
+    public function update(UpdateDirectorRequest $request, Director $director, MediaService $mediaService)
     {
-        //
+        $data = $request->validated();
+        $director->update($data);
+        if ($request->hasFile('poster_file')) {
+            $mediaService->storePoster($director, null, $request->file('poster_file'));
+        }
+        $director->load('poster');
+        return new DirectorResource($director);
     }
 
     /**
@@ -61,6 +62,7 @@ class DirectorController extends Controller
      */
     public function destroy(Director $director)
     {
-        //
+        $director->delete();
+        return response()->noContent();
     }
 }
