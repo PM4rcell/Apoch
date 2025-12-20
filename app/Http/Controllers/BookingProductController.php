@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking_product;
+use App\Models\BookingProduct;
 use App\Http\Requests\StoreBooking_productRequest;
 use App\Http\Requests\UpdateBooking_productRequest;
+use App\Http\Resources\BookingProductResource;
 
 class BookingProductController extends Controller
 {
@@ -13,15 +14,8 @@ class BookingProductController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $products = BookingProduct::query()->with(['booking', 'productType'])->paginate(15);
+        return BookingProductResource::collection($products);
     }
 
     /**
@@ -29,38 +23,40 @@ class BookingProductController extends Controller
      */
     public function store(StoreBooking_productRequest $request)
     {
-        //
+        $data = $request->validated();
+        $product = BookingProduct::create($data);
+
+        $product->load('booking', 'productType');
+        return new BookingProductResource($product);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Booking_product $booking_product)
+    public function show(BookingProduct $bookingProduct)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Booking_product $booking_product)
-    {
-        //
+        $bookingProduct->load('booking', 'productType');
+        return new BookingProductResource($bookingProduct);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBooking_productRequest $request, Booking_product $booking_product)
+    public function update(UpdateBooking_productRequest $request, BookingProduct $bookingProduct)
     {
-        //
+        $data = $request->validated();
+        $bookingProduct->update($data);
+
+        $bookingProduct->load('booking', 'productType');
+        return new BookingProductResource($bookingProduct);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking_product $booking_product)
+    public function destroy(BookingProduct $bookingProduct)
     {
-        //
+        $bookingProduct->delete();
+        return response()->noContent();
     }
 }

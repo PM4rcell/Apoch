@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Seat;
 use App\Http\Requests\StoreSeatRequest;
 use App\Http\Requests\UpdateSeatRequest;
+use App\Http\Resources\SeatResource;
 
 class SeatController extends Controller
 {
@@ -13,15 +14,8 @@ class SeatController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $seats = Seat::query()->with(['auditorium', 'seatType'])->paginate(15);
+        return SeatResource::collection($seats);
     }
 
     /**
@@ -29,7 +23,10 @@ class SeatController extends Controller
      */
     public function store(StoreSeatRequest $request)
     {
-        //
+        $data = $request->validated();
+        $seat = Seat::create($data);
+        $seat->load('auditorium', 'seatType');
+        return new SeatResource($seat);
     }
 
     /**
@@ -37,15 +34,8 @@ class SeatController extends Controller
      */
     public function show(Seat $seat)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Seat $seat)
-    {
-        //
+        $seat->load('auditorium', 'seatType');
+        return new SeatResource($seat);
     }
 
     /**
@@ -53,7 +43,10 @@ class SeatController extends Controller
      */
     public function update(UpdateSeatRequest $request, Seat $seat)
     {
-        //
+        $data = $request->validated();
+        $seat->update($data);
+        $seat->load('auditorium', 'seatType');
+        return new SeatResource($seat);
     }
 
     /**
@@ -61,6 +54,7 @@ class SeatController extends Controller
      */
     public function destroy(Seat $seat)
     {
-        //
+        $seat->delete();
+        return response()->noContent();
     }
 }

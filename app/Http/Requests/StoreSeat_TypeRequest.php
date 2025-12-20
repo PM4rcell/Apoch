@@ -22,7 +22,13 @@ class StoreSeat_TypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => [
+                'string',
+                'max:100',
+                'required',
+                'unique:seat_types,name'
+            ],
+            'description' => 'required|string|max:255'
         ];
     }
 }

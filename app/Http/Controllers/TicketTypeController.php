@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket_type;
 use App\Http\Requests\StoreTicket_typeRequest;
 use App\Http\Requests\UpdateTicket_typeRequest;
+use App\Http\Resources\TicketTypeResource;
+use App\Models\TicketType;
+use App\Services\MediaService;
 
 class TicketTypeController extends Controller
 {
@@ -13,54 +15,60 @@ class TicketTypeController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $ticketTypes = TicketType::query()->with('poster')->get();
+        return TicketTypeResource::collection($ticketTypes);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTicket_typeRequest $request)
+    public function store(StoreTicket_typeRequest $request, MediaService $mediaService)
     {
-        //
+        $data = $request->validated();
+        $ticketType = TicketType::create($data);
+        if(!empty($data['external_url'])){
+            $mediaService->storeExternalPoster($ticketType, $data['external_url']);
+        }
+        elseif($request->hasFile('poster')){
+            $mediaService->storeUploadedPoster($ticketType, $request->file('poster'));
+        }
+        $ticketType->load('poster');
+        return new TicketTypeResource($ticketType);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ticket_type $ticket_type)
+    public function show(TicketType $ticketType)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Ticket_type $ticket_type)
-    {
-        //
+        return new TicketTypeResource($ticketType);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTicket_typeRequest $request, Ticket_type $ticket_type)
+    public function update(UpdateTicket_typeRequest $request, TicketType $ticketType, MediaService $mediaService)
     {
-        //
+        $data = $request->validated();
+        $ticketType->update($data);
+        
+         if(!empty($data['external_url'])){
+            $mediaService->storeExternalPoster($ticketType, $data['external_url']);
+        }
+        elseif($request->hasFile('poster')){
+            $mediaService->storeUploadedPoster($ticketType, $request->file('poster'));
+        }
+
+        $ticketType->load('poster');
+        return new TicketTypeResource($ticketType);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket_type $ticket_type)
+    public function destroy(TicketType $ticketType)
     {
-        //
+        $ticketType->delete();
+        return response()->noContent();
     }
 }

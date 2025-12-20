@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Seat_Type;
+use App\Models\SeatType;
 use App\Http\Requests\StoreSeat_TypeRequest;
 use App\Http\Requests\UpdateSeat_TypeRequest;
+use App\Http\Resources\SeatTypeResource;
 
 class SeatTypeController extends Controller
 {
@@ -13,15 +14,8 @@ class SeatTypeController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $seatTypes = SeatType::all();
+        return SeatTypeResource::collection($seatTypes);
     }
 
     /**
@@ -29,38 +23,35 @@ class SeatTypeController extends Controller
      */
     public function store(StoreSeat_TypeRequest $request)
     {
-        //
+        $data = $request->validated();
+        $seatType = SeatType::create($data);
+        return new SeatTypeResource($seatType);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Seat_Type $seat_Type)
+    public function show(SeatType $seatType)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Seat_Type $seat_Type)
-    {
-        //
+        return new SeatTypeResource($seatType);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSeat_TypeRequest $request, Seat_Type $seat_Type)
+    public function update(UpdateSeat_TypeRequest $request, SeatType $seatType)
     {
-        //
+        $data = $request->validated();
+        $seatType->update($data);
+        return new SeatTypeResource($seatType->fresh());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Seat_Type $seat_Type)
+    public function destroy(SeatType $seatType)
     {
-        //
+        $seatType->delete();
+        return response()->noContent();
     }
 }

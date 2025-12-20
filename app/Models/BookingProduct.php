@@ -11,4 +11,17 @@ class BookingProduct extends Model
     /** @use HasFactory<\Database\Factories\BookingProductFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = [
+        'product_type_id',
+        'booking_id',
+        'quantity'
+    ];
+
+    public function productType(){
+        return $this->belongsTo(ProductType::class);
+    }
+    public function booking(){
+        return $this->belongsTo(Booking::class);
+    }
 }

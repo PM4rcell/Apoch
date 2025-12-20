@@ -22,7 +22,15 @@ class StoreProduct_typeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255|unique:product_types,name',
+            'price' => 'required|numeric|min:1',
+            'point_price' => 'required|int|min:1',
+            'era_id' => 'required|exists:eras,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+
+            'poster' => 'nullable|image|max:4096|mimes:png,jpg,jpeg',
+            'external_url' => ['nullable', 'url', 'max:2048']
         ];
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking_ticket;
+use App\Models\BookingTicket;
 use App\Http\Requests\StoreBooking_ticketRequest;
 use App\Http\Requests\UpdateBooking_ticketRequest;
+use App\Http\Resources\BookingTicketResource;
 
 class BookingTicketController extends Controller
 {
@@ -13,15 +14,8 @@ class BookingTicketController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $tickets = BookingTicket::query()->with(['booking', 'ticketType'])->paginate(15);
+        return BookingTicketResource::collection($tickets);
     }
 
     /**
@@ -29,38 +23,40 @@ class BookingTicketController extends Controller
      */
     public function store(StoreBooking_ticketRequest $request)
     {
-        //
+        $data = $request->validated();
+        $bookingTicket = BookingTicket::create($data);
+
+        $bookingTicket->load('booking', 'ticketType');
+        return $bookingTicket;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Booking_ticket $booking_ticket)
+    public function show(BookingTicket $bookingTicket)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Booking_ticket $booking_ticket)
-    {
-        //
+        $bookingTicket->load('booking', 'ticketType');
+        return new BookingTicketResource($bookingTicket);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBooking_ticketRequest $request, Booking_ticket $booking_ticket)
+    public function update(UpdateBooking_ticketRequest $request, BookingTicket $bookingTicket)
     {
-        //
+        $data = $request->validated();
+        $bookingTicket->update($data);
+
+        $bookingTicket->load('booking', 'ticketType');
+        return $bookingTicket;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking_ticket $booking_ticket)
+    public function destroy(BookingTicket $bookingTicket)
     {
-        //
+        $bookingTicket->delete();
+        return response()->noContent();
     }
 }

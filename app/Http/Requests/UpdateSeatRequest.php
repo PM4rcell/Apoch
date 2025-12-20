@@ -21,8 +21,11 @@ class UpdateSeatRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        return [            
+            'auditorium_id' => 'required|exists:auditoria,id',
+            'seat_type_id' => 'required|exists:seat_types,id',
+            'row' => 'required|int|min:1',
+            'number' => 'required|int|min:1'
         ];
     }
 }

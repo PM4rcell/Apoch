@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AuditoriumController;
+use App\Http\Controllers\BookingProductController;
+use App\Http\Controllers\BookingTicketController;
 use App\Http\Controllers\CastMemberController;
 use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\DirectorController;
@@ -10,7 +12,11 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\SeatController;
+use App\Http\Controllers\SeatTypeController;
+use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +55,16 @@ Route::apiResource('castMembers', CastMemberController::class)->only(['index', '
 Route::apiResource('directors', DirectorController::class)->only(['index', 'show']);
 // Achievements
 Route::apiResource('achievements', AchievementController::class)->only(['index', 'show']);
+// Ticket Types & Tickets
+Route::apiResource('ticketTypes', TicketTypeController::class)->only(['index', 'show']);
+Route::apiResource('bookingTickets', BookingTicketController::class)->only(['index', 'show']);
+// Product Types & Products
+Route::apiResource('productTypes', ProductTypeController::class)->only(['index', 'show']);
+Route::apiResource('bookingProducts', BookingProductController::class)->only(['index', 'show']);
+// Seats & Seat Types
+Route::apiResource('seatTypes', SeatTypeController::class)->only(['index', 'show']);
+route::apiResource('seats', SeatController::class)->only(['index', 'show']);
+
 
 //// Admin routes ////
 
@@ -77,6 +93,15 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::patch('users/{id}/role', [UserRoleController::class, 'update']);
     // Achievements
     Route::apiResource('achievements', AchievementController::class)->except(['index', 'show']);
+    // Ticket Types & Seats
+    Route::apiResource('ticketTypes', TicketTypeController::class)->except(['index', 'show']);
+    Route::apiResource('bookingTickets', BookingTicketController::class)->except(['index', 'show']);
+    // Product Types & Products
+    Route::apiResource('productTypes', ProductTypeController::class)->except(['index', 'show']);
+    Route::apiResource('bookingProducts', BookingProductController::class)->only(['index', 'show']);
+    // Seats & Seat Types
+    Route::apiResource('seatTypes', SeatTypeController::class)->except(['index', 'show']);
+    route::apiResource('seats', SeatController::class)->except(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';

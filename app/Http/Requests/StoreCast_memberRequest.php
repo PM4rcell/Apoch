@@ -24,7 +24,8 @@ class StoreCast_memberRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'external_url' => ['nullable', 'url'],
-            'poster_file'     => ['nullable', 'image', 'max:4096'],             
+            'poster_file'     => ['nullable', 'image', 'max:4096'], 
+                        
         ];
     }
 }

@@ -11,4 +11,18 @@ class ProductType extends Model
     /** @use HasFactory<\Database\Factories\ProductTypeFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'price',
+        'point_price',
+        'era_id',
+        'start_date',
+        'end_date'
+    ];
+
+    public function poster(){
+        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        ->where('media_type', 'poster');
+    }
 }
