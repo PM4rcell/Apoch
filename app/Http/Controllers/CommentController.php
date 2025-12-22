@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Models\Movie;
 
 class CommentController extends Controller
 {
@@ -13,23 +15,25 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $comments = Comment::paginate(15);
+        return CommentResource::collection($comments);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentRequest $request)
+    public function store(StoreCommentRequest $request, Movie $movie)
     {
-        //
+        $data = $request->validated();
+
+        $comment = $movie->comments()->create([
+            'user_id' => $request->user()->id,
+            'text' => $data['text'],
+            'rating' => $data['rating']
+        ]);
+
+        $comment->load('user', 'movie');
+        return new CommentResource($comment);
     }
 
     /**
@@ -37,15 +41,8 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
+        $comment->load('user', 'movie');
+        return new CommentResource($comment);
     }
 
     /**
@@ -53,7 +50,11 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $data = $request->validated();
+        $comment->update($data);
+
+        $comment->load('user', "movie");
+        return new CommentResource($comment);
     }
 
     /**
@@ -61,6 +62,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+        return response()->noContent();
     }
 }

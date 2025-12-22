@@ -24,4 +24,8 @@ class Achievement extends Model
         return $this->morphOne(Media::class, 'connected')
         ->where('media_type', 'poster');
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'profile_achievements');
+    }
 }

@@ -68,6 +68,23 @@ class User extends Authenticatable
         return $this->hasMany(News::class);
     }
 
+    public function achievements(){
+        return $this->belongsToMany(Achievement::class, 'profile_achievements')
+                    ->withTimestamps()
+                    ->withPivot('id');
+    }
+    public function watchlist(){
+        return $this->hasMany(ProfileWatchlist::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function poster(){
+        return $this->morphOne(Media::class, 'connected');
+    }
+
     public function getAuthPassword()
     {
         return optional($this->password)->password_hash;

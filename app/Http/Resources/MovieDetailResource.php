@@ -28,7 +28,8 @@ class MovieDetailResource extends JsonResource
             'genres' => GenreResource::collection($this->whenLoaded('genres')),            
             'director' => new DirectorResource($this->whenLoaded('director')),
             'era' => new EraResource($this->whenLoaded('era')),
-            'gallery' => PosterResource::collection($this->whenLoaded('gallery')),        
+            'gallery' => PosterResource::collection($this->whenLoaded('gallery')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),        
         ];
     }
 }

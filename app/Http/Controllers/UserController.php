@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserFullResource;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use App\Services\MediaService;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $users = User::paginate(15);
+        return UserResource::collection($users);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+        $user->load('achievements', 'comments', 'watchlist');
+        return new UserFullResource($user);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateUserRequest $request, User $user)
+    {
+        $data = $request->validated();
+
+        $user->update(collect($data)->except('watchlist')->all());
+
+        if(array_key_exists('watchlist', $data)){
+            $user->watchlist()->sync($data['watchlist']);
+        }
+
+        return new UserFullResource($user->fresh('watchlist'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return response()->noContent();
+    }
+
+    public function me(Request $request){
+        $user = $request->user();
+
+        $user->load('achievements', 'watchlist', 'comments', 'poster');
+
+        return new UserFullResource($user);
+    }
+    public function updateMe(UpdateUserRequest $request, MediaService $mediaService){        
+        $user = $request->user();
+        $data = $request->validated();
+
+        $user->update(collect($data)->except('watchlist')->all());
+
+        if(array_key_exists('watchlist', $data)){
+            $user->watchlist()->sync($data['watchlist']);
+        }
+
+        if($request->hasFile('poster')){
+            $mediaService->storeUploadedPoster($user, $request->file('poster'));
+        }
+
+        
+        $user->load('poster', 'achievements', 'watchlist', 'comments');
+        return new UserFullResource($user);
+    }
+}

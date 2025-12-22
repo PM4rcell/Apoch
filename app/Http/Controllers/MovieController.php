@@ -125,7 +125,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']);
+        $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres', 'comments.user.poster']);
         return new MovieDetailResource($movie);
     }
 

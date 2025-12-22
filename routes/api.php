@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingProductController;
 use App\Http\Controllers\BookingTicketController;
 use App\Http\Controllers\CastMemberController;
 use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DirectorController;
 use App\Http\Controllers\EraController;
 use App\Http\Controllers\GenreController;
@@ -17,16 +18,21 @@ use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\TicketTypeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 
+//// User Routes ////
+
 Route::middleware('auth:sanctum')->group(function() {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    // Profile
+    Route::get('/user/me', [UserController::class, 'me']);
+    Route::patch('/user/me', [UserController::class, 'updateMe']);
+    // Comment
+    Route::post('/movies/{movie}/comments', [CommentController::class, 'store']);
 });
 
 //// Public routes ////
@@ -91,6 +97,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('directors', DirectorController::class)->except(['index', 'show']);
     // Users
     Route::patch('users/{id}/role', [UserRoleController::class, 'update']);
+    Route::apiResource('users', UserController::class);
     // Achievements
     Route::apiResource('achievements', AchievementController::class)->except(['index', 'show']);
     // Ticket Types & Seats
@@ -101,7 +108,9 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('bookingProducts', BookingProductController::class)->only(['index', 'show']);
     // Seats & Seat Types
     Route::apiResource('seatTypes', SeatTypeController::class)->except(['index', 'show']);
-    route::apiResource('seats', SeatController::class)->except(['index', 'show']);
+    Route::apiResource('seats', SeatController::class)->except(['index', 'show']);    
+    // Comments
+    Route::apiResource('comments', CommentController::class)->except(['store']);
 });
 
 require __DIR__.'/auth.php';

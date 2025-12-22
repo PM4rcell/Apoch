@@ -59,5 +59,7 @@ class Movie extends Model
     {
         return $this->hasMany(Screening::class);
     }
-
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -23,7 +23,7 @@ class CommentFactory extends Factory
             'user_id' => User::query()->inRandomOrder()->first()->id,
             'movie_id' => Movie::query()->inRandomOrder()->first()->id,
             'text' => fake()->text(50),            
-            'rating' => fake()->randomFloat(1, 5),
+            'rating' => fake()->randomFloat(1, 1, 5),
         ];
     }
 }
