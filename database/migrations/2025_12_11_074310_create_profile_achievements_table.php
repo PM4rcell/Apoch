@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('profile_achievements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained('profiles')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('achievement_id')->constrained('achievements')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

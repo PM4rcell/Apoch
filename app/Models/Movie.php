@@ -39,12 +39,12 @@ class Movie extends Model
     }
     public function poster()
     {
-        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        return $this->morphOne(Media::class, 'connected')
         ->where('media_type', 'poster');
     }
     public function gallery()
     {
-        return $this->morphMany(Media::class, 'connected', 'connected_table', 'connected_id')
+        return $this->morphMany(Media::class, 'connected')
             ->where('media_type', 'image');            
     }
     public function cast()

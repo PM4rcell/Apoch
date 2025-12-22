@@ -20,8 +20,7 @@ class Era extends Model
     ];
 
     public function poster(){
-        return $this->hasOne(Media::class, 'connected_id', 'id')
-            ->where('connected_table', 'eras')
-            ->where('media_type', 'poster');
+        return $this->morphOne(Media::class, 'connected')
+        ->where('media_type', 'poster');
     }
 }

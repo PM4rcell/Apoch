@@ -20,17 +20,14 @@ class AdminUserSeeder extends Seeder
         $password = Password::create([
             'password_hash' => Hash::make('Admin123'),
             'password_token' => ''
-        ]);
-        $profile = Profile::create([
-            'role' => Role::ADMIN,
-            'points' => 0,
-            'last_login_at' => null
-        ]);
+        ]);        
         User::create([
             'username' => 'epoch_admin',
             'email' => 'admin@epoch.test',
-            'password_id' => $password->id,
-            'profile_id' => $profile->id
+            'password_id' => $password->id,            
+            'role' => Role::ADMIN,
+            'points' => 0,
+            'last_login_at' => null
         ]);
     }
 }

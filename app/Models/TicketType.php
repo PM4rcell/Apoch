@@ -22,7 +22,7 @@ class TicketType extends Model
 
     public function poster(){
 
-        return $this->morphOne(Media::class, 'connected', 'connected_table', 'connected_id')
+        return $this->morphOne(Media::class, 'connected')
         ->where('media_type', 'poster');
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('screening_id')->constrained('screenings')->cascadeOnDelete();
-            $table->integer('profile_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->float('booking_fee')->default(0);
             $table->string('email')->nullable();
             $table->string('status');

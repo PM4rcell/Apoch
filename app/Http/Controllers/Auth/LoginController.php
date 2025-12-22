@@ -23,7 +23,7 @@ class LoginController extends Controller
 
         $token = $user->createToken('main')->plainTextToken;
 
-        $user->profile?->update(['last_login_at' => now()]);
+        $user->update(['last_login_at' => now()]);
 
         return [
             'user' => new UserResource($user),

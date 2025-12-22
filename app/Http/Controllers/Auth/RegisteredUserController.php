@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Password;
-use App\Models\Profile;
 use App\Models\User;
+use App\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,17 +36,14 @@ class RegisteredUserController extends Controller
             'old3' => null,
         ]);
 
-        $profile = Profile::create([
-            'role' => 'user',
-            'points' => 0,
-            'last_login_at' => null
-        ]);
-
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
             'password_id' => $password->id,
-            'profile_id' => $profile->id
+            'role' => 'user',
+            'points' => 0,
+            'last_login_at' => null
+
         ]);
 
         event(new Registered($user));        

@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('password_id')->constrained('passwords')->cascadeOnDelete();
-            $table->foreignId('profile_id')->constrained('profiles')->cascadeOnDelete();
+            $table->string('role');
+            $table->integer('points');
+            $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

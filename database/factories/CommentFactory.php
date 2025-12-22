@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Movie;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'profile_id' => Profile::query()->inRandomOrder()->first()->id,
+            'user_id' => User::query()->inRandomOrder()->first()->id,
             'movie_id' => Movie::query()->inRandomOrder()->first()->id,
             'text' => fake()->text(50),            
             'rating' => fake()->randomFloat(1, 5),

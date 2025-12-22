@@ -21,6 +21,6 @@ class Media extends Model
 
     public function connected()
     {
-        return $this->morphTo(__FUNCTION__, 'connected_table', 'connected_id');
+        return $this->morphTo(__FUNCTION__);
     }
 }

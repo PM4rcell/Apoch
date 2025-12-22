@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Profile;
 use App\Models\Screening;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,9 +20,8 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-         
             'screening_id' => Screening::query()->inRandomOrder()->first()->id,
-            'profile_id' => Profile::query()->inRandomOrder()->first()->id,
+            'user_id' => User::query()->inRandomOrder()->first()->id,
             'booking_fee' => fake()->randomFloat(2,0, 3),
             'email' => null,
             'status' => fake()->randomElement(['Watched', 'Upcoming'])

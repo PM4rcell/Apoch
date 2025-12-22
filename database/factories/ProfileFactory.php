@@ -19,7 +19,7 @@ class ProfileFactory extends Factory
         return [
             //  $table->string('role');
             // $table->integer('points');
-            'role' => fake()->randomElement(['User', 'Admin', 'Moderator']),
+            'role' => fake()->randomElement(['User', 'Admin']),
             'points' => fake()->numberBetween(0,20000)
         ];
     }

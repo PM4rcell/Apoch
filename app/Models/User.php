@@ -27,7 +27,9 @@ class User extends Authenticatable
         'username',
         'email',
         'password_id',
-        'profile_id'
+        'role',
+        'points',
+        'last_login_at'
     ];
 
     /**
@@ -47,7 +49,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',            
+            'email_verified_at' => 'datetime',       
+            'role' => Role::class,     
         ];
     }
 
@@ -71,6 +74,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin(){
-        return $this->profile?->role === Role::ADMIN;
+        return $this->role === Role::ADMIN;
     }
+
 }
