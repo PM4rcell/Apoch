@@ -25,4 +25,12 @@ class TicketType extends Model
         return $this->morphOne(Media::class, 'connected')
         ->where('media_type', 'poster');
     }
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_tickets', 'ticket_type_id', 'booking_id')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
+
 }

@@ -22,7 +22,11 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'screening_id' => 'required|exists:screenings,id',
+            'user_id' => 'nullable|exists:users,id',
+            'email' => 'nullable|email',
+            'booking_fee' => 'required|numeric|min:1',
+            'status' => 'required|string|in:pending,paid,cancelled'
         ];
     }
 }

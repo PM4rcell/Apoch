@@ -15,7 +15,9 @@ class NewsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [            
+            'id' => $this->id,
             'title' => $this->title,
+            'slug' => $this->slug,
             'body' => $this->body,            
             'category' => $this->category,
             'excerp' => $this->excerp,
@@ -24,6 +26,7 @@ class NewsResource extends JsonResource
             'author' => $this->whenLoaded('user', function() {
                 return ['name' => $this->user->username];
             }),
+            'poster' => new PosterResource($this->whenLoaded('poster'))
         ];
     }
 }

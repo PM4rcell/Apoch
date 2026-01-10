@@ -22,12 +22,16 @@ class UpdateNewsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'category' => 'required|string|max:100',
             'excerp' => 'required|string',
             'read_time_min' => 'required|integer|min:1',
             'external_link' => 'nullable|url',   
+
+            'external_poster_url' => 'nullable|url',
+            'poster_file' => 'nullable|image|max:4096'
         ];
     }
 }

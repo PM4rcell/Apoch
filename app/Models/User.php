@@ -81,6 +81,10 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function bookings(){
+        $this->hasMany(Booking::class);
+    }
+
     public function poster(){
         return $this->morphOne(Media::class, 'connected');
     }

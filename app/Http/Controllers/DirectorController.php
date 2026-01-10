@@ -42,7 +42,7 @@ class DirectorController extends Controller
      */
     public function show(Director $director)
     {
-        $director->load('movies');
+        $director->load(['movies', 'poster']);
         return new DirectorResource($director);
     }
 
@@ -59,7 +59,7 @@ class DirectorController extends Controller
         } elseif ($request->hasFile('poster_file')) {
             $mediaService->storeUploadedPoster($director, $request->file('poster_file'));
         }
-        $director->load('poster');
+        $director->load('poster', 'movies');
         return new DirectorResource($director);
     }
 

@@ -23,7 +23,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'text' => 'required|string|max:2000',
-            'rating' => 'required|integer|min:1|max:5'
+            'rating' => 'required|integer|min:1|max:5',
         ];
     }
 }

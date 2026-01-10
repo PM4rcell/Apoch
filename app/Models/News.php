@@ -14,16 +14,23 @@ class News extends Model
     use SoftDeletes;
     protected $fillable = [
         'title',
-        'content',
         'category',
         'excerp',
         'read_time_min',
         'external_link',
+        'user_id',
+        'slug',
+        'body'
     ];
 
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function poster(){
+        return $this->morphOne(Media::class, 'connected')
+                    ->where('media_type', 'poster');
     }
 }

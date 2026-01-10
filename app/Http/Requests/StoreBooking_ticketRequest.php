@@ -24,7 +24,7 @@ class StoreBooking_ticketRequest extends FormRequest
         return [            
             'ticket_type_id' => 'required|exists:ticket_types,id',
             'booking_id' => 'required|exists:bookings,id',
-            'quantity' => 'required|int|min:1'
+            'quantity' => 'required|integer|min:1'
         ];
     }
 }

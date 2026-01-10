@@ -23,5 +23,10 @@ class Seat extends Model
     public function seatType(){
         return $this->belongsTo(SeatType::class);
     }
+
+    public function bookings(){
+        return $this->belongsToMany(Booking::class, 'booking_seats', 'seat_id', 'booking_id')
+                    ->withTimestamps();
+    }
     
 }

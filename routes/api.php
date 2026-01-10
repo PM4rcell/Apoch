@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AuditoriumController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingProductController;
 use App\Http\Controllers\BookingTicketController;
 use App\Http\Controllers\CastMemberController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\SeatMapController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\UserController;
@@ -63,13 +65,18 @@ Route::apiResource('directors', DirectorController::class)->only(['index', 'show
 Route::apiResource('achievements', AchievementController::class)->only(['index', 'show']);
 // Ticket Types & Tickets
 Route::apiResource('ticketTypes', TicketTypeController::class)->only(['index', 'show']);
-Route::apiResource('bookingTickets', BookingTicketController::class)->only(['index', 'show']);
 // Product Types & Products
 Route::apiResource('productTypes', ProductTypeController::class)->only(['index', 'show']);
-Route::apiResource('bookingProducts', BookingProductController::class)->only(['index', 'show']);
 // Seats & Seat Types
 Route::apiResource('seatTypes', SeatTypeController::class)->only(['index', 'show']);
 route::apiResource('seats', SeatController::class)->only(['index', 'show']);
+// Booking
+Route::get('/screenings/{screening}/seats', [SeatMapController::class, 'index']);
+
+Route::post('/bookings/lock', [BookingController::class, 'lockSeats']);
+Route::put('/bookings/{booking}/seats', [BookingController::class, 'updateSeats']);
+Route::post('/bookings/{booking}/checkout', [BookingController::class, 'checkout']);
+Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
 
 
 //// Admin routes ////
@@ -92,7 +99,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     // Languages
     Route::apiResource('languages', LanguageController::class)->except(['index', 'show']); 
     // Cast Members
-    Route::apiResource('castMembers', CastMemberController::class)->except(['index', 'show']);   
+    Route::apiResource('castMembers', CastMemberController::class)->except(['index', 'show']); 
     // Directors
     Route::apiResource('directors', DirectorController::class)->except(['index', 'show']);
     // Users
@@ -102,15 +109,17 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('achievements', AchievementController::class)->except(['index', 'show']);
     // Ticket Types & Seats
     Route::apiResource('ticketTypes', TicketTypeController::class)->except(['index', 'show']);
-    Route::apiResource('bookingTickets', BookingTicketController::class)->except(['index', 'show']);
+    Route::apiResource('bookingTickets', BookingTicketController::class);
     // Product Types & Products
     Route::apiResource('productTypes', ProductTypeController::class)->except(['index', 'show']);
-    Route::apiResource('bookingProducts', BookingProductController::class)->only(['index', 'show']);
+    Route::apiResource('bookingProducts', BookingProductController::class);
     // Seats & Seat Types
     Route::apiResource('seatTypes', SeatTypeController::class)->except(['index', 'show']);
     Route::apiResource('seats', SeatController::class)->except(['index', 'show']);    
     // Comments
     Route::apiResource('comments', CommentController::class)->except(['store']);
+    // Bookings
+    Route::apiResource('bookings', BookingController::class);
 });
 
 require __DIR__.'/auth.php';

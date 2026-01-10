@@ -40,7 +40,7 @@ class StoreMovieRequest extends FormRequest
             'cast.*.name' => 'required|string|max:100',
             'cast.*.role' => 'required|string|max:100',
 
-            'omdb_poster_url' => ['nullable', 'url'],
+            'external_url' => ['nullable', 'url'],
             'poster_file'     => ['nullable', 'image', 'max:4096'], 
 
             'gallery'   => ['nullable', 'array'],

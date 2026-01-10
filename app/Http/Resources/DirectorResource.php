@@ -18,6 +18,7 @@ class DirectorResource extends JsonResource
             'id' => $this->id,  
             'name' => $this->name,
             'movies' => MovieSummaryResource::collection($this->whenLoaded('movies')),
+            'poster' => new PosterResource($this->whenLoaded('poster'))
         ];
     }
 }

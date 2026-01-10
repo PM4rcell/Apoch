@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
+use App\Http\Resources\BookingResource;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
@@ -13,15 +15,8 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $bookings = Booking::paginate(15);
+        return BookingResource::collection($bookings);
     }
 
     /**
@@ -29,7 +24,9 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        //
+        $data = $request->validated();
+        $newBooking = Booking::create($data);
+        return new BookingResource($newBooking);
     }
 
     /**
@@ -37,15 +34,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Booking $booking)
-    {
-        //
+        return new BookingResource($booking);
     }
 
     /**
@@ -53,7 +42,9 @@ class BookingController extends Controller
      */
     public function update(UpdateBookingRequest $request, Booking $booking)
     {
-        //
+        $data = $request->validated();
+        $booking->update($data);
+        return new BookingResource($booking);
     }
 
     /**
@@ -61,6 +52,29 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
+        $booking->delete();
+        return response()->noContent();
+    }
+
+    public function lockSeats(Request $request){
         //
+    }
+    public function updateSeats(Request $request, Booking $booking){
+        //
+    }
+    public function checkout(Request $request, Booking $booking){
+        //
+    }
+    public function cancel(Booking $booking){
+        if($booking->status !== 'pending'){
+            abort(400,'Only Pending Bookings Can Be Cancelled.');
+        }
+
+        $booking->update([
+            'status' => 'cancelled',
+            'deleted_at' => now()
+        ]);
+
+        return response()->json(['status' => 'cancelled']);
     }
 }

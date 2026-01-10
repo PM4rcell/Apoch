@@ -40,7 +40,7 @@ class UpdateMovieRequest extends FormRequest
             'cast.*.name' => 'sometimes|string|max:100',
             'cast.*.role' => 'sometimes|string|max:100',
 
-            'omdb_poster_url' => ['sometimes', 'url'],
+            'external_url' => ['sometimes', 'url'],
             'poster_file'     => ['sometimes', 'image', 'max:4096'], 
 
             'gallery'   => ['sometimes', 'array'],

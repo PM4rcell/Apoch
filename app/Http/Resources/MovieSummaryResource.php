@@ -22,6 +22,7 @@ class MovieSummaryResource extends JsonResource
             'vote_avg' => $this->vote_avg,
             'runtime_min' => $this->runtime_min,
             'slug' => $this->slug,
+            'is_featured' => $this->is_featured,
             'poster' => PosterResource::make($this->whenLoaded('poster')),
         ];
     }

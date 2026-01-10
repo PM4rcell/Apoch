@@ -93,8 +93,8 @@ class MovieController extends Controller
         $movie->cast()->sync($pivotData);
 
         //store poster    
-        if (!empty($data['omdb_poster_url'])) {
-            $mediaService->storeExternalPoster($movie, $data['omdb_poster_url']);
+        if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($movie, $data['external_url']);
         } elseif ($request->hasFile('poster_file')) {
             $mediaService->storeUploadedPoster($movie, $request->file('poster_file'));
         }        
@@ -132,7 +132,7 @@ class MovieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMovieRequest $request, Movie $movie)
+    public function update(UpdateMovieRequest $request, Movie $movie, MediaService $mediaService)
     {                
         $data = $request->validated();         
             
@@ -167,7 +167,29 @@ class MovieController extends Controller
         $movie->cast()->sync($pivotData);
     }
         
+     //store poster    
+        if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($movie, $data['external_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($movie, $request->file('poster_file'));
+        }
 
+     //store images
+        $gallery = $request->input('gallery', []);
+        $galleryFiles = $request->file('gallery', []);
+
+        foreach ($gallery as $index => $item) {
+            if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
+                $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
+                continue;
+            }
+
+            if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
+                $mediaService->storeExternalMedia($movie, $item);
+                continue;
+            }
+        }
+        
         return new MovieDetailResource($movie->fresh()->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']));
     }
 

@@ -26,6 +26,9 @@ class StoreEraRequest extends FormRequest
             'startYear' => 'required|date',
             'endYear' => 'required|date|after_or_equal:startYear',
             'description' => 'required|string',
+
+            'external_url' => 'nullable|url',
+            'poster_file' => 'nullable|image|max:4096'
         ];
     }
 }

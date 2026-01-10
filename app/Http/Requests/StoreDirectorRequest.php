@@ -24,6 +24,7 @@ class StoreDirectorRequest extends FormRequest
         return [
             'name' => 'required|string|max:255|unique:directors,name',
             'poster_file' => 'nullable|image|max:2048',
+            'external_url' => 'nullable|url'
         ];
     }
 }
