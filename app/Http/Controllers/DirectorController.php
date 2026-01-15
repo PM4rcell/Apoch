@@ -15,7 +15,7 @@ class DirectorController extends Controller
      */
     public function index()
     {
-        $directors = Director::paginate(15);
+        $directors = Director::query()->with('poster')->orderBy('name')->paginate(15);
         return DirectorResource::collection($directors);
     }
 

@@ -42,7 +42,7 @@ class MovieController extends Controller
         }
 
         $movies->orderBy('release_date', 'desc');
-        return MovieSummaryResource::collection($movies->paginate(10));
+        return MovieSummaryResource::collection($movies->paginate(6));
     }
 
     /**
