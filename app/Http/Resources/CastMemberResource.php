@@ -17,6 +17,7 @@ class CastMemberResource extends JsonResource
         return [            
             'id' => $this->id,
             'name' => $this->name,            
+            'role' => $this->pivot->role,
             'poster'=> new PosterResource($this->whenLoaded('poster')),
         ];
     }

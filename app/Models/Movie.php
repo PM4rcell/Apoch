@@ -49,7 +49,7 @@ class Movie extends Model
     }
     public function cast()
     {
-        return $this->belongsToMany(CastMember::class, 'movie_casts');
+        return $this->belongsToMany(CastMember::class, 'movie_casts')->withPivot("role");
     }
     public function genres()
     {

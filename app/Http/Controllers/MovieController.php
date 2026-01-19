@@ -136,39 +136,31 @@ class MovieController extends Controller
     {                
         $data = $request->validated();         
             
-        if (isset($data['director'])) {
-            $director = Director::firstOrCreate([
-                'name' => $data['director'],
-            ]);
-            $data['director_id'] = $director->id;
-        }
+        $director = Director::firstOrCreate(['name' => $data['director'],]);
+        $data['director_id'] = $director->id;
+        
         $movie->update($data);
     
 
-    if (array_key_exists('genres', $data)) {
+        //Update Genre Relations
         $genreIds = [];
-
         foreach ($data['genres'] as $genreName) {
             $genre = Genre::firstOrCreate(['name' => $genreName]);
-            $genreIds[] = $genre->id;
-        }
-        
+            $genreIds[] = $genre->id;        
+        }        
         $movie->genres()->sync($genreIds);
-    }
     
-    if (array_key_exists('cast', $data)) {
+        //Update Casting Data
         $pivotData = []; 
-
         foreach ($data['cast'] as $castMember) {
             $cast = CastMember::firstOrCreate(['name' => $castMember['name']]);
             $pivotData[$cast->id] = ['role' => $castMember['role']];
         }
 
         $movie->cast()->sync($pivotData);
-    }
         
      //store poster    
-        if (!empty($data['external_url'])) {
+        if (filled($data['external_url'])) {
             $mediaService->storeExternalPoster($movie, $data['external_url']);
         } elseif ($request->hasFile('poster_file')) {
             $mediaService->storeUploadedPoster($movie, $request->file('poster_file'));

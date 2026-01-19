@@ -18,7 +18,7 @@ class CastMember extends Model
 
     public function movies()
     {
-        return $this->belongsToMany(Movie::class, 'movie_cast');
+        return $this->belongsToMany(Movie::class, 'movie_cast')->withPivot("role");
     }
     public function poster()
     {

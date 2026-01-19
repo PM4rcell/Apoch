@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\Password;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Role;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->float('vote_avg');
-            $table->integer('imdb_id');
+            $table->string('imdb_id');
             $table->string("omdb_category");
             $table->string('age_rating');
             $table->date('release_date');

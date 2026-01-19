@@ -22,29 +22,29 @@ class UpdateMovieRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'title' => 'sometimes|string|max:255',
-            'imdb_id' => 'sometimes|string|max:20|unique:movies,imdb_id',
-            'age_rating' => 'sometimes|string|max:10',
-            'vote_avg' => 'sometimes|numeric|min:0|max:10',
-            'description' => 'sometimes|string',
-            'release_date' => 'sometimes|date',
-            'runtime_min' => 'sometimes|integer|min:1',
-            'director' => 'sometimes|string|max:100',
-            'era' => 'sometimes|string|max:100',
-            'trailer_link' => 'sometimes|url',
+            'title' => 'required|string|max:255',
+            'imdb_id' => 'required|string|max:20|unique:movies,imdb_id',
+            'age_rating' => 'required|string|max:10',
+            'vote_avg' => 'required|numeric|min:0|max:10',
+            'description' => 'required|string',
+            'release_date' => 'required|date',
+            'runtime_min' => 'required|integer|min:1',
+            'director' => 'required|string|max:100',
+            'era' => 'required|string|max:100',
+            'trailer_link' => 'required|url',
 
-            'genres' => 'sometimes|array|min:1',
-            'genres.*' => 'sometimes|string|max:40',
+            'genres' => 'required|array|min:1',
+            'genres.*' => 'required|string|max:40',
 
-            'cast' => 'sometimes|array|min:1',
-            'cast.*.name' => 'sometimes|string|max:100',
-            'cast.*.role' => 'sometimes|string|max:100',
+            'cast' => 'required|array|min:1',
+            'cast.*.name' => 'required|string|max:100',
+            'cast.*.role' => 'required|string|max:100',
 
-            'external_url' => ['sometimes', 'url'],
-            'poster_file'     => ['sometimes', 'image', 'max:4096'], 
+            'external_url' => ['nullable', 'url'],
+            'poster_file'     => ['nullable', 'image', 'max:4096'], 
 
-            'gallery'   => ['sometimes', 'array'],
-            'gallery.*' => ['sometimes', 'max:4096'],
+            'gallery'   => ['nullable', 'array'],
+            'gallery.*' => ['nullable', 'max:4096'],            
         ];
     }
 }
