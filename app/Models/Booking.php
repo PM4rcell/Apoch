@@ -17,7 +17,7 @@ class Booking extends Model
         'user_id',
         'booking_fee',
         'status',
-        'email'
+        'email'        
     ];
 
     public function user(){
@@ -37,5 +37,9 @@ class Booking extends Model
 
     public function screening(){
         return $this->belongsTo(Screening::class);
+    }
+
+    public function payment(){
+        return $this->belongsTo(Payment::class);
     }
 }

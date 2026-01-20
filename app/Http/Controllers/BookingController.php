@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingLockRequest;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Http\Resources\BookingResource;
+use App\Models\BookingSeat;
+use App\Models\BookingTicket;
+use App\Models\Screening;
+use App\Models\Seat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -56,14 +62,96 @@ class BookingController extends Controller
         return response()->noContent();
     }
 
-    public function lockSeats(Request $request){
-        //
+    public function lockSeats(BookingLockRequest $request){
+        
+        $data = $request->validated();
+        $screening = Screening::findOrFail($data['screening_id']);
+        $seatIds = $data["seat_ids"];
+
+        return DB::transaction(function() use ($request, $screening, $data, $seatIds) {
+            $seats = Seat::where('auditorium_id', "=", $screening->auditorium_id)
+                        ->whereIn('id', $seatIds)
+                        ->lockForUpdate()
+                        ->get();
+
+            $conflicts = BookingSeat::whereIn('seat_id', $seatIds)
+            ->whereHas('booking', function($q) use ($screening) {
+                $q->where('screening_id', $screening->id)
+                    ->whereIn('status', ['pending', 'paid'])
+                    ->whereNull('deleted_at')
+                    ->where('created_at', '>', now()->subMinutes(10));
+            })->pluck("seat_id");
+
+            if ($conflicts->isNotEmpty()) {
+                return response()->json(['conflicts' => $conflicts], 409);
+            }
+
+            $bookingData = [
+                'screening_id' => $screening->id,
+                'booking_fee' => 0,
+                'status' => 'pending'
+            ];
+
+            if($data['customer']['mode'] === 'guest'){
+                $bookingData['email'] = $data['customer']['email'];                
+            }
+            else{
+                $bookingData['user_id'] = $request->user()->id;
+            }
+
+            $booking = Booking::create($bookingData);
+
+            foreach ($data['tickets'] as $ticket ){
+                BookingSeat::create([
+                    'seat_id' => $ticket['seat_id'],
+                    'booking_id' => $booking->id
+                ]);
+
+                BookingTicket::create([
+                    'booking_id' => $booking->id,
+                    'ticket_type_id' => $ticket['ticket_type_id'],
+                    'quantity' => 1
+                ]);
+            }
+
+            return response()->json([
+                'booking_id' => $booking->id,
+                'expires_at' => now()->addMinutes(10),
+            ], 201);
+        });
     }
     public function updateSeats(Request $request, Booking $booking){
         //
     }
     public function checkout(Request $request, Booking $booking){
-        //
+        if($booking->user_id){
+            abort_unless($request->user()->id === $booking->user_id, 403);
+        }
+        else{
+            abort_unless($request->email === $booking->email, 403);
+        }
+
+        abort_if($booking->status !== 'pending', 400, "Booking already processed!");
+
+       $total = DB::table('booking_tickets')
+                ->join('ticket_types', 'booking_tickets.ticket_type_id', '=', 'ticket_types.id')
+                ->where('booking_tickets.booking_id', $booking->id)
+                ->sum(DB::raw('ticket_types.price * booking_tickets.quantity'));
+
+        $payment = $booking->payment()->create([
+            'booking_id' => $booking->id,
+            'amount' => $total,
+            'method' => $request->input('payment_method', 'card'),
+            'status' => 'success',
+
+        ]); 
+        
+        $booking->update(['status' => 'paid']);
+
+        return response()->json([
+            'status' => 'paid',
+            'total' => $total
+        ]);
     }
     public function cancel(Booking $booking){
         if($booking->status !== 'pending'){

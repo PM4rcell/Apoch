@@ -11,4 +11,16 @@ class BookingSeat extends Model
     /** @use HasFactory<\Database\Factories\BookingSeatFactory> */
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = [
+        'seat_id',
+        'booking_id'
+    ];
+
+    public function booking(){
+        return $this->belongsTo(Booking::class);
+    }
+    public function seat(){
+        return $this->belongsTo(Seat::class);
+    }
 }

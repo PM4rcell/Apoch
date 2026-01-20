@@ -15,7 +15,8 @@ class EraController extends Controller
      */
     public function index()
     {
-        return  EraResource::collection(Era::all());
+        $eras = Era::query()->with('poster')->get();
+        return  EraResource::collection($eras);
     }
 
     /**

@@ -20,8 +20,8 @@ class PaymentFactory extends Factory
         return [            
             'booking_id' => Booking::query()->inRandomOrder()->first()->id,
             'amount' => fake()->randomFloat(2,30,200),            
-            'method' => fake()->randomElement(['Pending', 'Paid', 'Processing']),
-            'status' => fake()->randomElement(['Cash', 'Card'])
+            'method' => fake()->randomElement(['Cash', 'Card']),
+            'status' => fake()->randomElement(['Pending', 'Paid', 'Processing']),
         ];
     }
 }
