@@ -24,7 +24,7 @@ class MovieDetailResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,            
             'poster' => PosterResource::make($this->whenLoaded('poster')),
-            'cast' => CastMemberResource::collection($this->whenLoaded('cast')),
+            'cast' => MovieCastResource::collection($this->whenLoaded('cast')),
             'genres' => GenreResource::collection($this->whenLoaded('genres')),            
             'director' => new DirectorResource($this->whenLoaded('director')),
             'era' => new EraResource($this->whenLoaded('era')),

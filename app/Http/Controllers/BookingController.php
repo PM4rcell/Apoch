@@ -116,7 +116,7 @@ class BookingController extends Controller
 
             return response()->json([
                 'booking_id' => $booking->id,
-                'expires_at' => now()->addMinutes(10),
+                'expires_at' => now('Europe/Budapest')->addMinutes(10),
             ], 201);
         });
     }

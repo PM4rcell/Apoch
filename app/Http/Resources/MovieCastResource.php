@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CastMemberResource extends JsonResource
+class MovieCastResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,10 @@ class CastMemberResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [            
+        return [
             'id' => $this->id,
             'name' => $this->name,
+            'role' => $this->pivot->role,
             'poster'=> new PosterResource($this->whenLoaded('poster')),
         ];
     }
