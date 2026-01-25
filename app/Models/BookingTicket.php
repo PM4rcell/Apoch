@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BookingTicket extends Model
+class BookingTicket extends Pivot
 {
     /** @use HasFactory<\Database\Factories\BookingTicketFactory> */
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'booking_tickets';
     protected $fillable = [
         'ticket_type_id',
         'booking_id',

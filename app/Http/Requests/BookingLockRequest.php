@@ -24,10 +24,8 @@ class BookingLockRequest extends FormRequest
         return [
             "screening_id" => 'required|exists:screenings,id',
             "seat_ids" => 'required|array|min:1',
-            "seat_ids.*" => 'integer|exists:seats,id',
-            "tickets" => 'required|array|size:' . count($this->seat_ids ?? []),
-            "tickets.*.seat_id" => 'required|integer|exists:seats,id',
-            "tickets.*.ticket_type_id" => 'required|exists:ticket_types,id',
+            "seat_ids.*" => 'integer|exists:seats,id',            
+            "ticket_type_id" => 'required|exists:ticket_types,id',
             "customer.mode" => 'required|in:user,guest',
             'customer.email' => 'required_if:customer.mode,guest|email',            
         ];

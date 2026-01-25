@@ -23,11 +23,11 @@ class SeatMapController extends Controller
                         ->toArray();
         $seats = $screening->auditorium->seats->map(function ($seat) use($lockedSeatIDs){
             $seat->state = in_array($seat->id, $lockedSeatIDs)
-                ? 'unavaiable'
-                : 'avaiable';
+                ? 'unavailable'
+                : 'available';
             return $seat;
         });
-
+        
         return SeatResource::collection($seats);
     }
 }

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingLockRequest;
+use App\Http\Resources\BookingCheckoutResource;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Http\Resources\BookingResource;
+use App\Http\Resources\BookingTicketResource;
+use App\Http\Resources\TicketTypeResource;
 use App\Models\BookingSeat;
 use App\Models\BookingTicket;
 use App\Models\Screening;
@@ -68,8 +71,13 @@ class BookingController extends Controller
         $screening = Screening::findOrFail($data['screening_id']);
         $seatIds = $data["seat_ids"];
 
-        return DB::transaction(function() use ($request, $screening, $data, $seatIds) {
-            $seats = Seat::where('auditorium_id', "=", $screening->auditorium_id)
+        $userId = null;
+        if($data['customer']['mode'] !== 'guest'){
+            $userId = $request->user()->id ?? auth('sanctum')->user()->id;
+        }
+
+        return DB::transaction(function() use ($request, $screening, $data, $seatIds, $userId) {
+            $seats = Seat::where('auditorium_id', $screening->auditorium_id)
                         ->whereIn('id', $seatIds)
                         ->lockForUpdate()
                         ->get();
@@ -78,10 +86,9 @@ class BookingController extends Controller
             ->whereHas('booking', function($q) use ($screening) {
                 $q->where('screening_id', $screening->id)
                     ->whereIn('status', ['pending', 'paid'])
-                    ->whereNull('deleted_at')
                     ->where('created_at', '>', now()->subMinutes(10));
             })->pluck("seat_id");
-
+        
             if ($conflicts->isNotEmpty()) {
                 return response()->json(['conflicts' => $conflicts], 409);
             }
@@ -96,27 +103,27 @@ class BookingController extends Controller
                 $bookingData['email'] = $data['customer']['email'];                
             }
             else{
-                $bookingData['user_id'] = $request->user()->id;
+                $bookingData['user_id'] = $userId;                
             }
 
             $booking = Booking::create($bookingData);
 
-            foreach ($data['tickets'] as $ticket ){
+            foreach ($data['seat_ids'] as $ticket ){
                 BookingSeat::create([
-                    'seat_id' => $ticket['seat_id'],
+                    'seat_id' => $ticket,
                     'booking_id' => $booking->id
                 ]);
 
                 BookingTicket::create([
                     'booking_id' => $booking->id,
-                    'ticket_type_id' => $ticket['ticket_type_id'],
+                    'ticket_type_id' => $data['ticket_type_id'],
                     'quantity' => 1
                 ]);
             }
 
             return response()->json([
                 'booking_id' => $booking->id,
-                'expires_at' => now('Europe/Budapest')->addMinutes(10),
+                'expires_at' => now()->addMinutes(10),
             ], 201);
         });
     }
@@ -125,7 +132,8 @@ class BookingController extends Controller
     }
     public function checkout(Request $request, Booking $booking){
         if($booking->user_id){
-            abort_unless($request->user()->id === $booking->user_id, 403);
+            $userId = $request->user()->id ?? auth('sanctum')->user()->id;            
+            abort_unless($userId === $booking->user_id, 403);
         }
         else{
             abort_unless($request->email === $booking->email, 403);
@@ -148,10 +156,9 @@ class BookingController extends Controller
         
         $booking->update(['status' => 'paid']);
 
-        return response()->json([
-            'status' => 'paid',
-            'total' => $total
-        ]);
+        $booking->load(['screening.movie.poster', 'screening.auditorium','payment','bookingTickets.ticketType']);
+
+        return (new BookingCheckoutResource($booking));
     }
     public function cancel(Booking $booking){
         if($booking->status !== 'pending'){
@@ -160,8 +167,10 @@ class BookingController extends Controller
 
         $booking->update([
             'status' => 'cancelled',
-            'deleted_at' => now()
         ]);
+         $booking->seats()->delete();
+        $booking->tickets()->delete();
+        $booking->delete();
 
         return response()->json(['status' => 'cancelled']);
     }

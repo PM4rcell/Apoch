@@ -52,7 +52,7 @@ Route::apiResource('movies', MovieController::class)->only(['index', 'show']);
 Route::get('movies/{id}/similar', [MovieController::class, 'getSimilarMovies']);
 // Screenings
 Route::apiResource('screenings', ScreeningController::class)->only(['index', 'show']);
-Route::get('screenings/{id}/seats', [ScreeningController::class, 'getScreeningSeats']);
+// Route::get('screenings/{id}/seats', [ScreeningController::class, 'getScreeningSeats']);
 //  Genres
 Route::resource('genres', GenreController::class)->only(['index', 'show']);
 // Languages

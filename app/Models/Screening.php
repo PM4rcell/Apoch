@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +17,10 @@ class Screening extends Model
         'movie_id',
         'language_id',
         'start_time',
+    ];
+
+    protected $casts = [
+        'start_time' => 'datetime'
     ];
     public function auditorium()
     {

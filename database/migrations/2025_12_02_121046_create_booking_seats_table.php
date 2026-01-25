@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained('bookings')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
+            $table->unique(['seat_id', 'booking_id']);
         });
     }
 

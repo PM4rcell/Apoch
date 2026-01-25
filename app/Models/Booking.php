@@ -35,11 +35,21 @@ class Booking extends Model
                     ->withTimestamps();
     }
 
+    public function bookingTickets()
+    {
+        return $this->hasMany(BookingTicket::class);
+    }
+
+    public function bookingSeats()
+    {
+        return $this->hasMany(BookingSeat::class);
+    }
+
     public function screening(){
         return $this->belongsTo(Screening::class);
     }
 
     public function payment(){
-        return $this->belongsTo(Payment::class);
+        return $this->HasOne(Payment::class);
     }
 }

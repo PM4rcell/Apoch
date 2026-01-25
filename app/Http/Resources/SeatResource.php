@@ -20,6 +20,7 @@ class SeatResource extends JsonResource
             'seatType' => new SeatTypeResource($this->whenLoaded('seatType')),
             'row' => $this->row,
             'number' => $this->number,            
+            'state' => $this->state
         ];
     }
 }
