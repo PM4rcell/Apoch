@@ -23,7 +23,7 @@ class MovieSummaryResource extends JsonResource
             'runtime_min' => $this->runtime_min,
             'slug' => $this->slug,
             'is_featured' => $this->is_featured,
-            'poster' => PosterResource::make($this->whenLoaded('poster')),
+            'poster' => new PosterResource($this->whenLoaded('poster')),
         ];
     }
 }

@@ -61,7 +61,7 @@ class MovieController extends Controller
             $data['director_id'] = $director->id;
         }
 
-        //crete movie
+        //create movie
         $movie = Movie::create([
             'title' => $data['title'],
             'slug' => str($data['title'])->slug(),

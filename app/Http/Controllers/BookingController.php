@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingCheckoutRequest;
 use App\Http\Requests\BookingLockRequest;
 use App\Http\Resources\BookingCheckoutResource;
 use App\Models\Booking;
@@ -130,7 +131,7 @@ class BookingController extends Controller
     public function updateSeats(Request $request, Booking $booking){
         //
     }
-    public function checkout(Request $request, Booking $booking){
+    public function checkout(BookingCheckoutRequest $request, Booking $booking){
         if($booking->user_id){
             $userId = $request->user()->id ?? auth('sanctum')->user()->id;            
             abort_unless($userId === $booking->user_id, 403);

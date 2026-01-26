@@ -3,16 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateDirectorRequest extends FormRequest
+class BookingCheckoutRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->isAdmin();   
+        return true;
     }
 
     /**
@@ -23,14 +22,7 @@ class UpdateDirectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('directors')->ignore($this->director),
-            ],
-            'external_url' => 'nullable|url',
-            'poster_file' => 'nullable|image|max:2048',
+            'email' => 'nullable|email'
         ];
     }
 }
