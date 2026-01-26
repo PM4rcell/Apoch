@@ -22,7 +22,7 @@ class StoreDirectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:directors,name',
+            'name' => 'required|string|max:255',
             'poster_file' => 'nullable|image|max:2048',
             'external_url' => 'nullable|url'
         ];

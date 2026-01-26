@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateDirectorRequest extends FormRequest
 {
@@ -23,12 +22,7 @@ class UpdateDirectorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('directors')->ignore($this->director),
-            ],
+            'name' => 'required|string|max:255',
             'external_url' => 'nullable|url',
             'poster_file' => 'nullable|image|max:2048',
         ];
