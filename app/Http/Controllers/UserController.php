@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(15);
+        $users = User::query()->with('poster')->paginate(15);
         return UserResource::collection($users);
     }
 
@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('achievements', 'comments', 'watchlist');
+        $user->load('achievements', 'comments','bookings', 'watchlist.movie');
         return new UserFullResource($user);
     }
 

@@ -23,7 +23,8 @@ class UserFullResource extends JsonResource
             'poster' => new PosterResource($this->whenLoaded('poster')),
             "achievements" => AchievementResource::collection($this->whenLoaded('achievements')),
             "watchlist" => WatchlistResource::collection($this->whenLoaded('watchlist')),
-            "comments" => CommentResource::collection($this->whenLoaded('comments'))
+            "comments" => CommentResource::collection($this->whenLoaded('comments')),
+            "bookings" => BookingResource::collection($this->whenLoaded('bookings'))
         ];
     }
 }
