@@ -37,7 +37,6 @@ class BookingCheckoutResource extends JsonResource
     
                 return [
                     'ticket_type' => $ticket->ticketType->name,
-                    'quantity' => $ticket->quantity,
                     'price' => $ticket->ticketType->price,
                     'row' => $seat?->row,
                     'seat_number' => $seat?->number

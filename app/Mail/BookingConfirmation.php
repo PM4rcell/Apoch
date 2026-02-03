@@ -17,8 +17,7 @@ class BookingConfirmation extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Booking $booking) {}
-
+    public function __construct(public Booking $booking, public $tickets = []) {}    
     /**
      * Get the message envelope.
      */
@@ -38,7 +37,8 @@ class BookingConfirmation extends Mailable
             view: 'emails.bookings.confirmation',
             with: [
                 'booking' => $this->booking,
-                'screening' => $this->booking->screening
+                'screening' => $this->booking->screening,
+                'tickets' => $this->tickets
             ]
         );
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BookingCheckoutRequest;
 use App\Http\Requests\BookingLockRequest;
 use App\Http\Resources\BookingCheckoutResource;
+use App\Mail\BookingConfirmation;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
@@ -17,6 +18,8 @@ use App\Models\Screening;
 use App\Models\Seat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -153,12 +156,29 @@ class BookingController extends Controller
             'method' => $request->input('payment_method', 'card'),
             'status' => 'success',
 
-        ]); 
-        
+        ]);         
         $booking->update(['status' => 'paid']);
 
-        $booking->load(['screening.movie.poster', 'screening.auditorium','payment','bookingTickets.ticketType']);
+        $booking->load(['screening.movie.poster', 'screening.auditorium','payment','bookingTickets.ticketType', 'bookingSeats.seat']);
 
+        $tickets = collect($booking->bookingTickets)->map(function ($ticket, $index) use ($booking) {
+            $seat = collect($booking->bookingSeats)[$index]?->seat;
+            return [
+                'row' => $seat?->row,
+                'seat_number' => $seat?->number,
+                'name' => $ticket->ticketType->name,
+                'price' => $ticket->ticketType->price,
+            ];
+        })->values();
+        $user = $booking->user_id ? auth('sanctum')->user() ?? $request->user() : null;
+        $email = $user?->email ?? $request->email;  // Nullsafe operator prevents crash
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) 
+        {
+            Log::warning("No valid email for booking {$booking->id}");        
+        } else {
+            Mail::to($email)->queue(new BookingConfirmation($booking, $tickets));
+        }
+        
         return (new BookingCheckoutResource($booking));
     }
     public function cancel(Booking $booking){
