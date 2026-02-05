@@ -20,6 +20,8 @@ class TicketType extends Model
         'end_date'
     ];
 
+    protected $casts = ['price' => 'decimal:2'];
+
     public function poster(){
 
         return $this->morphOne(Media::class, 'connected')

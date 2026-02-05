@@ -23,7 +23,7 @@ class StoreTicket_typeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:product_types,name',
-            'price' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:0|max:9999.99',
             'point_price' => 'required|int|min:1',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',

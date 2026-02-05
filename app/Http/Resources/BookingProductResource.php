@@ -15,6 +15,7 @@ class BookingProductResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [            
+            'id' => $this->id,
             'booking' => new BookingResource($this->whenLoaded('booking')),
             'producttType' => new ProductTypeResource($this->whenLoaded('productType')),
             'quantity' => $this->quantity

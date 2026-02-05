@@ -22,4 +22,8 @@ class cinema extends Model
     public function auditoriums(){
         return $this->hasMany(Auditorium::class);
     }
+
+    public function era(){
+        return $this->belongsTo(Era::class);
+    }
 }

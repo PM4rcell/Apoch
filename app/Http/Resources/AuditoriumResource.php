@@ -17,8 +17,8 @@ class AuditoriumResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'cinema' => new CinemaResource($this->whenLoaded('cinema')),
-            'capacity' => $this->capacity,
+            'cinema' => new CinemaResource($this->whenLoaded('cinema')),            
+            'capacity' => (int) $this->capacity,
             'seats' => SeatResource::collection($this->whenLoaded('seats')),
             'screenings' => ScreeningResource::collection($this->whenLoaded('screenings'))
         ];

@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(15);
+        $comments = Comment::query()->with('user', 'movie')->paginate(15);
         return CommentResource::collection($comments);
     }
 

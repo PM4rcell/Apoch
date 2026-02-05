@@ -22,7 +22,7 @@ class UpdatecinemaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'era_id' => 'required|exists:eras,id',
+            'era_id' => 'required|integer|exists:eras,id',
             'name' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:500',

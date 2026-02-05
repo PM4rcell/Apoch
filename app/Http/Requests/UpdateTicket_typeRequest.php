@@ -30,7 +30,7 @@ class UpdateTicket_typeRequest extends FormRequest
                 'unique:ticket_types,name',
                 Rule::unique('ticket_types', 'name')->ignore($this->ticketType)
             ],
-            'price' => 'required|numeric|min:1',
+            'price' => 'required|decimal:2|min:1',
             'point_price' => 'required|int|min:1',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',

@@ -16,10 +16,10 @@ class CinemaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'era_id' => $this->era_id,
+            'name' => $this->name,            
             'city' => $this->city,
             'address' => $this->address,
+            'era' => new EraResource($this->whenLoaded('era'))
         ];
     }
 }

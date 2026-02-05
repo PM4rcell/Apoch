@@ -26,7 +26,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movies = Movie::query()->with('poster');
+        $movies = Movie::query()->with('poster', 'gallery', 'director', 'era', 'cast', 'genres', 'comments.user.poster');
 
         if (request()->filled('era_id')) {
             $movies->where('era_id', request()->input('era_id'));
@@ -40,9 +40,9 @@ class MovieController extends Controller
                 $q->whereDate('time', '>=', now());
             });
         }
-
-        $movies->orderBy('release_date', 'desc');
-        return MovieSummaryResource::collection($movies->paginate(6));
+        
+        $movies->orderBy('release_date', 'desc');        
+        return MovieDetailResource::collection($movies->paginate(10));
     }
 
     /**

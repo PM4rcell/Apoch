@@ -14,7 +14,7 @@ class CinemaController extends Controller
      */
     public function index()
     {
-        $cinemas = cinema::all();
+        $cinemas = cinema::query()->with('era')->orderByDesc('name')->paginate(10);
         return CinemaResource::collection($cinemas);
     }
 
@@ -25,6 +25,7 @@ class CinemaController extends Controller
     {
         $data = $request->validated();
         $cinema = cinema::create($data);
+        $cinema->load('era');
         return new CinemaResource($cinema);
     }
 
@@ -33,6 +34,7 @@ class CinemaController extends Controller
      */
     public function show(cinema $cinema)
     {
+        $cinema->load('era');
         return new CinemaResource($cinema);
     }
 
@@ -43,6 +45,7 @@ class CinemaController extends Controller
     {
         $data = $request->validated();
         $cinema->update($data);
+        $cinema->load('era');
         return new CinemaResource($cinema);
     }
 

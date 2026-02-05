@@ -23,4 +23,8 @@ class Era extends Model
         return $this->morphOne(Media::class, 'connected')
         ->where('media_type', 'poster');
     }
+
+    public function cinemas(){
+        return $this->hasMany(cinema::class);
+    }
 }

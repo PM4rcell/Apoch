@@ -15,7 +15,7 @@ class AuditoriumController extends Controller
      */
     public function index()
     {
-        $auditoriums = Auditorium::query()->with('cinema')->paginate(15);
+        $auditoriums = Auditorium::query()->with('cinema', 'seats', 'screenings')->paginate(15);
         return AuditoriumResource::collection($auditoriums);
     }
 
@@ -26,6 +26,7 @@ class AuditoriumController extends Controller
     {
         $data = $request->validated();
         $auditorium = Auditorium::create($data);
+        $auditorium->load('cinema', 'seats', 'screenings');
         return new AuditoriumResource($auditorium);
     }
 

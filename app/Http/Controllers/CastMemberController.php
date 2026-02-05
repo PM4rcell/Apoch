@@ -53,6 +53,7 @@ class CastMemberController extends Controller
     public function update(UpdateCast_memberRequest $request, CastMember $castMember)
     {
         $castMember->update($request->validated());
+        $castMember->load('poster');
         return new CastMemberResource($castMember);
     }
 

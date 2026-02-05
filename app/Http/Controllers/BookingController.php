@@ -28,7 +28,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::paginate(15);
+        $bookings = Booking::query()->with('user', 'screening')->paginate(15);
         return BookingResource::collection($bookings);
     }
 
@@ -39,6 +39,7 @@ class BookingController extends Controller
     {
         $data = $request->validated();
         $newBooking = Booking::create($data);
+        $newBooking->load('user', 'screening');
         return new BookingResource($newBooking);
     }
 
@@ -47,6 +48,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
+        $booking->load('user', 'screening');
         return new BookingResource($booking);
     }
 
@@ -57,6 +59,7 @@ class BookingController extends Controller
     {
         $data = $request->validated();
         $booking->update($data);
+        $booking->load('user', 'screening');
         return new BookingResource($booking);
     }
 

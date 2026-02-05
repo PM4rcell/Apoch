@@ -60,6 +60,8 @@ class AchievementController extends Controller
         elseif($request->hasFile('poster_file')){
             $mediaService->storeUploadedPoster($achievement, $request->file('poster_file'));
         }
+
+        $achievement->load('poster');
         return new AchievementResource($achievement);
     }
 

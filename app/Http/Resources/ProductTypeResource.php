@@ -19,7 +19,7 @@ class ProductTypeResource extends JsonResource
             'name' =>$this->name,
             'price' => $this->price,
             'point_price' => $this->point_price,
-            'era_id' => $this->era_id,
+            'era_id' => new EraResource($this->whenLoaded('era')),
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'poster' => new PosterResource($this->whenLoaded('poster'))
