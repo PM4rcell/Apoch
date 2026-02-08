@@ -87,4 +87,20 @@ class UserController extends Controller
         $user->load('poster', 'achievements', 'watchlist', 'comments');
         return new UserFullResource($user);
     }
+
+      /**
+     * Update only the user's role.
+     */
+    public function updateRole(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|in:admin,user'
+        ]);
+
+        $user->update([
+            'role' => $request->role
+        ]);
+
+        return new UserResource($user);
+    }
 }

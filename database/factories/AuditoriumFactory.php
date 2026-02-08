@@ -20,7 +20,7 @@ class AuditoriumFactory extends Factory
         return [
             'name' => fake()->word(),
             'cinema_id' => cinema::query()->inRandomOrder()->first()->id,
-            'capacity' => fake()->numberBetween(15,50)
+            'capacity' => 96
         ];
     }
 }

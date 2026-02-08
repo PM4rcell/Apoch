@@ -12,10 +12,10 @@ class UserRoleController extends Controller
 {
     public function update(UpdateUserRoleRequest $request, User $user){
         
-        $user->profile()->update([
-            'role' => $request->role
+        $user->update([
+             'role' => Role::from($request->role)
         ]);
 
-        return new UserResource($user->fresh('profile'));
+        return new UserResource($user);
     }
 }
