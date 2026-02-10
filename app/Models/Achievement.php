@@ -19,6 +19,11 @@ class Achievement extends Model
         'points',
         'year'
     ];
+
+    protected $casts = [
+        'points' => 'integer'
+    ];
+    
     public function poster()
     {
         return $this->morphOne(Media::class, 'connected')

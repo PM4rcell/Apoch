@@ -24,7 +24,7 @@ class UserFullResource extends JsonResource
             "achievements" => AchievementResource::collection($this->whenLoaded('achievements')),
             "watchlist" => WatchlistResource::collection($this->whenLoaded('watchlist')),
             "comments" => CommentResource::collection($this->whenLoaded('comments')),
-            "bookings" => BookingResource::collection($this->whenLoaded('bookings'))
+            "bookings" => BookingCheckoutResource::collection($this->whenLoaded('bookings'))
         ];
     }
 }

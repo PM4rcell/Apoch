@@ -17,10 +17,12 @@ class BookingResource extends JsonResource
         return [
             'id' => $this->id,
             'screening' => new ScreeningResource($this->whenLoaded('screening')),
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserResource($this->whenLoaded('user')),                        
             'email' => $this->email,
             'booking_fee' => $this->booking_fee,
-            'status' => $this->status
+            'status' => $this->status,
+            'tickets' => TicketResource::collection($this->whenLoaded('bookingTickets')),
+            'seats' => BookingSeatResource::collection($this->whenLoaded('bookingSeats'))
         ];
     }
 }

@@ -28,7 +28,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::query()->with('user', 'screening')->paginate(15);
+        $bookings = Booking::query()->with('user', 'screening', 'bookingTickets', 'bookingSeats.seat.seatType','bookingSeats.seat.auditorium')->paginate(15);
         return BookingResource::collection($bookings);
     }
 
@@ -79,15 +79,44 @@ class BookingController extends Controller
         $seatIds = $data["seat_ids"];
 
         $userId = null;
+        $email = null;
         if($data['customer']['mode'] !== 'guest'){
             $userId = $request->user()->id ?? auth('sanctum')->user()->id;
         }
+        else{
+            $email = $data['customer']['email'] ?? null;
+        }
 
-        return DB::transaction(function() use ($request, $screening, $data, $seatIds, $userId) {
+        return DB::transaction(function() use ($request, $screening, $data, $seatIds, $userId, $email) {
             $seats = Seat::where('auditorium_id', $screening->auditorium_id)
                         ->whereIn('id', $seatIds)
                         ->lockForUpdate()
                         ->get();
+
+            $candidateQuery = Booking::where('screening_id', $screening->id)
+                ->where('status', 'pending')
+                ->where('created_at', '>', now()->subMinutes(10));
+
+            if ($userId) {
+                $candidateQuery->where('user_id', $userId);
+            } elseif ($email) {
+                $candidateQuery->where('email', $email);
+            }
+
+            $candidateQuery->whereHas('bookingSeats', function($q) use ($seatIds) {
+                $q->whereIn('seat_id', $seatIds);
+            }, '=', count($seatIds))
+            ->whereDoesntHave('bookingSeats', function($q) use ($seatIds) {
+                $q->whereNotIn('seat_id', $seatIds);
+            });
+
+            $existing = $candidateQuery->first();
+            if ($existing) {
+                return response()->json([
+                    'booking_id' => $existing->id,
+                    'expires_at' => $existing->created_at->addMinutes(10),
+                ], 200);
+            }
 
             $conflicts = BookingSeat::whereIn('seat_id', $seatIds)
             ->whereHas('booking', function($q) use ($screening) {

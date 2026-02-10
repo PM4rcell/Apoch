@@ -65,7 +65,7 @@ class UserController extends Controller
     public function me(Request $request){
         $user = $request->user();
 
-        $user->load('achievements', 'watchlist', 'comments', 'poster');
+        $user->load('achievements', 'watchlist', 'comments', 'poster', 'bookings');
 
         return new UserFullResource($user);
     }
