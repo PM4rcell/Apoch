@@ -17,6 +17,11 @@ class Seat extends Model
         'seat_type_id',
         'number',        
     ];
+
+    protected $casts = [
+        "row" => "integer",
+        "number" => "integer",
+    ];
     public function auditorium(){
         return $this->belongsTo(Auditorium::class);
     }

@@ -18,8 +18,8 @@ class BookingSeatResource extends JsonResource
             'id' => $this->id,
             'row' => $this->whenLoaded('seat', fn() => $this->seat->row),
             'number' => $this->whenLoaded('seat', fn() => $this->seat->number),
-            'seatType' => new SeatTypeResource($this->whenLoaded('seat.seatType')),
-            'auditorium' => new AuditoriumResource($this->whenLoaded('seat.auditorium')),            
+            'seatType' => $this->seat->seatType->name,
+            'auditorium' => $this->seat->auditorium->name,            
         ];
     }
 }

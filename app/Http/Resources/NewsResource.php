@@ -23,9 +23,7 @@ class NewsResource extends JsonResource
             'excerp' => $this->excerp,
             'read_time_min' => $this->read_time_min,
             'external_link' => $this->external_link,
-            'author' => $this->whenLoaded('user', function() {
-                return ['name' => $this->user->username];
-            }),
+            'user' => new UserFullResource($this->whenLoaded("user")),            
             'poster' => new PosterResource($this->whenLoaded('poster'))
         ];
     }

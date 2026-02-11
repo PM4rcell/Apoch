@@ -103,7 +103,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     // Directors
     Route::apiResource('directors', DirectorController::class)->except(['index', 'show']);
     // Users
-    Route::patch('user/{id}/role', [UserController::class, 'updateRole']);
+    Route::patch('user/{user}/role', [UserController::class, 'updateRole']);
     Route::apiResource('users', UserController::class);
     // Achievements
     Route::apiResource('achievements', AchievementController::class)->except(['index', 'show']);
