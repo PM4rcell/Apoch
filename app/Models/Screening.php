@@ -17,6 +17,7 @@ class Screening extends Model
         'movie_id',
         'language_id',
         'start_time',
+        'screening_type_id'
     ];
 
     protected $casts = [
@@ -35,5 +36,9 @@ class Screening extends Model
 
     public function bookings(){
         return $this->hasMany(Booking::class);
+    }
+
+    public function screeningType(){
+        return $this->belongsTo(ScreeningType::class);
     }
 }

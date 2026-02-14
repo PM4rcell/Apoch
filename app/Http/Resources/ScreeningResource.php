@@ -19,6 +19,7 @@ class ScreeningResource extends JsonResource
             'auditorium' => new AuditoriumResource($this->whenLoaded('auditorium')),
             'movie' => new MovieSummaryResource($this->whenLoaded('movie')),
             'language' => new LanguageResource($this->whenLoaded('language')),
+            'screening_type' => new ScreeningTypeResource($this->whenLoaded('screeningType')),
             'start_time' => $this->start_time->toDateTimeString(),
             'start_date' => $this->start_time->toDateString(),
             'start_day' => $this->start_time->format('l')

@@ -30,7 +30,7 @@ class BookingCheckoutResource extends JsonResource
                 'date' => $this->screening->start_time->format('l, F j, Y'),
                 'time' => $this->screening->start_time->format('g:i A'),
                 'auditorium' => $this->screening->auditorium->name,
-                'format' => $this->screening->format
+                'screeningType' => $this->screening->screeningType->name
             ],
            'tickets' => collect($this->bookingTickets)->map(function ($ticket, $index) {
                 $seat = collect($this->bookingSeats)[$index]?->seat ?? null; 

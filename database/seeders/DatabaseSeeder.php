@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             MovieCastSeeder::class,
             MovieGenreSeeder::class,
             LanguageSeeder::class,
+            ScreeningTypeSeeder::class,
             ScreeningSeeder::class,
             BookingSeeder::class,            
             BookingSeatSeeder::class,

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Auditorium;
 use App\Models\Language;
 use App\Models\Movie;
+use App\Models\ScreeningType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +24,7 @@ class ScreeningFactory extends Factory
             'auditorium_id' => Auditorium::query()->inRandomOrder()->first()->id,
             'movie_id' => Movie::query()->inRandomOrder()->first()->id,
             'language_id' => Language::query()->inRandomOrder()->first()->id,
+            'screening_type_id' => ScreeningType::query()->inRandomOrder()->first()->id,
             'start_time' => fake()->dateTime(),
         ];
     }

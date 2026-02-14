@@ -22,7 +22,8 @@ class ScreeningController extends Controller
         ->with([
             'auditorium', 
             'movie' => fn($query) => $query->with(['poster', 'era']), 
-            'language'
+            'language',
+            'screeningType'
         ]);   
         
         if (request()->filled('era_id')) {
@@ -34,8 +35,9 @@ class ScreeningController extends Controller
         if (request()->filled('movie_id')) {
             $screenings->where('movie_id', request()->input('movie_id'));
         }
-        if (request()->filled('date')) {
-            $screenings->where('start_time', request()->input('date'));
+        if (request()->filled('date') || request()->filled('start_date')) {
+            $date = request()->input("date", request()->input('start_date'));
+            $screenings->whereDate("start_time", $date);
         }
         return ScreeningResource::collection($screenings->paginate(10));
     }
@@ -54,7 +56,8 @@ class ScreeningController extends Controller
         $screening->load([
             'auditorium', 
             'movie' => fn($query) => $query->with(['poster', 'era']), 
-            'language'
+            'language',
+            'screeningType'
         ]);
         return new ScreeningResource($screening);   
     }
@@ -67,7 +70,8 @@ class ScreeningController extends Controller
         $screening->load([
             'auditorium', 
             'movie' => fn($query) => $query->with(['poster', 'era']), 
-            'language'
+            'language',
+            'screeningType'
         ]);
         return new ScreeningResource($screening);
     }
@@ -88,7 +92,8 @@ class ScreeningController extends Controller
         $screening->load([
             'auditorium', 
             'movie' => fn($query) => $query->with(['poster', 'era']), 
-            'language'
+            'language',
+            'screeningType'
         ]);
         return new ScreeningResource($screening);
     }
