@@ -17,7 +17,7 @@ class TicketTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
+            'name' => fake()->randomElement(['default', 'student']),
             'price' => fake()->randomFloat(2, 5, 30),
             'point_price' => fake()->numberBetween(100, 10000),
             'start_date' => fake()->date(),

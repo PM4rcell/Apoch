@@ -22,7 +22,7 @@ class UpdateLanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:50|unique:languages,name',
+            'name' => 'required|string|max:50',
             'description' => 'required|string|max:255',
         ];
     }

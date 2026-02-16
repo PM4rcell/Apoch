@@ -79,8 +79,8 @@ class UserController extends Controller
             $user->watchlist()->sync($data['watchlist']);
         }
 
-        if($request->hasFile('poster')){
-            $mediaService->storeUploadedPoster($user, $request->file('poster'));
+        if($request->has('external_url')){
+            $mediaService->storeExternalPoster($user, $request->input('external_url'));
         }
 
         

@@ -14,6 +14,11 @@ class TicketTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        TicketType::factory(5)->create();
+        TicketType::factory()->create([
+            "name" => "Default"
+        ]);
+        TicketType::factory()->create([
+            "name" => "Student"
+        ]);
     }
 }
