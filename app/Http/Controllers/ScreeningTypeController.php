@@ -14,7 +14,7 @@ class ScreeningTypeController extends Controller
      */
     public function index()
     {
-        $screeningTypes = ScreeningType::query()->with(["screenings.auditorium", "screenings.movie", "screenings.language"])->get();
+        $screeningTypes = ScreeningType::all();
         return ScreeningTypeResource::collection($screeningTypes);
     }
 
@@ -25,7 +25,6 @@ class ScreeningTypeController extends Controller
     {
         $data = $request->validated();
         $screeningType = ScreeningType::create($data);
-        $screeningType->load("screenings.auditorium", "screenings.movie", "screenings.language");
         return new ScreeningTypeResource($screeningType);
     }
 
@@ -45,7 +44,6 @@ class ScreeningTypeController extends Controller
     {
         $data = $request->validated();
         $screeningType->update($data);
-        $screeningType->load("screenings.auditorium", "screenings.movie", "screenings.language");
         return new ScreeningTypeResource($screeningType);
     }
 
