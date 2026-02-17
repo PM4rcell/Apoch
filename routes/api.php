@@ -16,6 +16,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\ScreeningTypeController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\SeatMapController;
 use App\Http\Controllers\SeatTypeController;
@@ -67,6 +68,8 @@ Route::apiResource('achievements', AchievementController::class)->only(['index',
 Route::apiResource('ticketTypes', TicketTypeController::class)->only(['index', 'show']);
 // Product Types & Products
 Route::apiResource('productTypes', ProductTypeController::class)->only(['index', 'show']);
+// Screening Types
+Route::apiResource('screeningTypes', ScreeningTypeController::class)->only(['index', 'show']);
 // Seats & Seat Types
 Route::apiResource('seatTypes', SeatTypeController::class)->only(['index', 'show']);
 route::apiResource('seats', SeatController::class)->only(['index', 'show']);
@@ -113,6 +116,8 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     // Product Types & Products
     Route::apiResource('productTypes', ProductTypeController::class)->except(['index', 'show']);
     Route::apiResource('bookingProducts', BookingProductController::class);
+    //screening Types
+    Route::apiResource('screeningTypes', ScreeningTypeController::class);
     // Seats & Seat Types
     Route::apiResource('seatTypes', SeatTypeController::class)->except(['index', 'show']);
     Route::apiResource('seats', SeatController::class)->except(['index', 'show']);    

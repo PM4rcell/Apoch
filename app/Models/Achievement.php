@@ -21,7 +21,8 @@ class Achievement extends Model
     ];
 
     protected $casts = [
-        'points' => 'integer'
+        'points' => 'integer',
+        'year' => 'integer'
     ];
     
     public function poster()

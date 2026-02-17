@@ -18,7 +18,7 @@ class Screening extends Model
         'language_id',
         'start_time',
         'screening_type_id'
-    ];
+    ];    
 
     protected $casts = [
         'start_time' => 'datetime'

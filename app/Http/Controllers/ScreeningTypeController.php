@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ScreeningType;
 use App\Http\Requests\StoreScreeningTypeRequest;
 use App\Http\Requests\UpdateScreeningTypeRequest;
+use App\Http\Resources\ScreeningTypeResource;
 
 class ScreeningTypeController extends Controller
 {
@@ -13,15 +14,8 @@ class ScreeningTypeController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $screeningTypes = ScreeningType::query()->with(["screenings.auditorium", "screenings.movie", "screenings.language"])->get();
+        return ScreeningTypeResource::collection($screeningTypes);
     }
 
     /**
@@ -29,7 +23,10 @@ class ScreeningTypeController extends Controller
      */
     public function store(StoreScreeningTypeRequest $request)
     {
-        //
+        $data = $request->validated();
+        $screeningType = ScreeningType::create($data);
+        $screeningType->load("screenings.auditorium", "screenings.movie", "screenings.language");
+        return new ScreeningTypeResource($screeningType);
     }
 
     /**
@@ -37,23 +34,19 @@ class ScreeningTypeController extends Controller
      */
     public function show(ScreeningType $screeningType)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ScreeningType $screeningType)
-    {
-        //
-    }
+        $screeningType->load("screenings.auditorium", "screenings.movie", "screenings.language");
+        return new ScreeningTypeResource($screeningType);
+    }    
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateScreeningTypeRequest $request, ScreeningType $screeningType)
     {
-        //
+        $data = $request->validated();
+        $screeningType->update($data);
+        $screeningType->load("screenings.auditorium", "screenings.movie", "screenings.language");
+        return new ScreeningTypeResource($screeningType);
     }
 
     /**
@@ -61,6 +54,7 @@ class ScreeningTypeController extends Controller
      */
     public function destroy(ScreeningType $screeningType)
     {
-        //
+        $screeningType->delete();
+        return response()->noContent();
     }
 }
