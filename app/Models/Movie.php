@@ -28,6 +28,11 @@ class Movie extends Model
         'slug',
         'trailer_link',
     ];
+
+    protected $casts = [
+        "vote_avg" => "float",
+        "runtime_min" => "integer"
+    ];
     
     public function era()
     {

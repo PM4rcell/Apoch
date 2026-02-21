@@ -26,6 +26,7 @@ class StoreScreeningRequest extends FormRequest
             'movie_id' => ['required', 'exists:movies,id'],
             'language' => ['required', 'string', 'max:50'],
             'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
+            'screening_type_id' => ['required', 'integer', 'exists:screening_types,id']
         ];
     }
 }

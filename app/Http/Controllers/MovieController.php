@@ -136,8 +136,8 @@ class MovieController extends Controller
     {                
         $data = $request->validated();         
             
-        $director = Director::firstOrCreate(['name' => $data['director'],]);
-        $data['director_id'] = $director->id;
+        // $director = Director::firstOrCreate(['name' => $data['director'],]);
+        // $data['director_id'] = $director->id;
         
         $movie->update($data);
     

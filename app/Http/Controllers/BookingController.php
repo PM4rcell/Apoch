@@ -157,8 +157,9 @@ class BookingController extends Controller
                 ]);
             }
 
+            $booking->load(['screening.movie.poster', 'screening.auditorium','payment','bookingTickets.ticketType', 'bookingSeats.seat']);
             return response()->json([
-                'booking_id' => $booking->id,
+                'booking' => new BookingCheckoutResource($booking),
                 'expires_at' => now()->addMinutes(10),
             ], 201);
         });

@@ -16,6 +16,10 @@ class ScreeningType extends Model
         "priceMultiplier"
     ];
 
+    protected $casts = [
+        'priceMultiplier' => 'float',
+    ];
+
     public function screenings(){
         return $this->hasMany(Screening::class);
     }

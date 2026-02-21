@@ -29,7 +29,7 @@ class StoreMovieRequest extends FormRequest
             'description' => 'required|string',
             'release_date' => 'required|date',
             'runtime_min' => 'required|integer|min:1',
-            'director' => 'required|string|max:100',
+            'director_id' => 'required|string|max:100',
             'era_id' => 'required|exists:eras,id',
             'trailer_link' => 'nullable|url',
 

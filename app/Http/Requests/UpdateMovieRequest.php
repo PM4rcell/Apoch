@@ -23,15 +23,15 @@ class UpdateMovieRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'imdb_id' => 'required|string|max:20|unique:movies,imdb_id',
-            'age_rating' => 'required|string|max:10',
+            'imdb_id' => 'nullable|string|max:20|unique:movies,imdb_id',
+            'age_rating' => 'nullable|string|max:10',
             'vote_avg' => 'required|numeric|min:0|max:10',
             'description' => 'required|string',
             'release_date' => 'required|date',
             'runtime_min' => 'required|integer|min:1',
-            'director' => 'required|string|max:100',
-            'era' => 'required|string|max:100',
-            'trailer_link' => 'required|url',
+            'director_id' => 'required|string|max:100',
+            'era_id' => 'required|exists:eras,id',
+            'trailer_link' => 'nullable|url',
 
             'genres' => 'required|array|min:1',
             'genres.*' => 'required|string|max:40',

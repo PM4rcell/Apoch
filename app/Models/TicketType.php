@@ -20,7 +20,10 @@ class TicketType extends Model
         'end_date'
     ];
 
-    protected $casts = ['price' => 'decimal:2'];
+    protected $casts = [
+        'price' => 'float',
+        'point_price' => 'integer'
+        ];
 
     public function poster(){
 
