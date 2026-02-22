@@ -18,7 +18,7 @@ class PosterResource extends JsonResource
     {        
         $poster = $this->resource;
         $path = $poster?->path;
-        if($path && (Str::startsWith($path, 'http://') || Str::startsWith($path, 'https://'))) {
+        if($path && (Str::startsWith($path, 'http://') || Str::startsWith($path, 'https://') || Str::startsWith($path, 'data:'))) {
             $url = $path;
         } else {
             $url = asset('storage/' . $poster->path);
