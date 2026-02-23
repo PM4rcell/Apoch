@@ -50,6 +50,7 @@ class UserController extends Controller
             $user->watchlist()->sync($data['watchlist']);
         }
 
+        $user->load("watchlist.movie");
         return new UserFullResource($user->fresh('watchlist'));
     }
 
@@ -89,7 +90,7 @@ class UserController extends Controller
         }    
 
         
-        $user->load('poster', 'achievements', 'watchlist', 'comments');
+        $user->load('poster', 'achievements', 'watchlist.movie', 'comments');
         return new UserFullResource($user);
     }
 
