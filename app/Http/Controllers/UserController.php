@@ -46,8 +46,10 @@ class UserController extends Controller
 
         $user->update(collect($data)->except('watchlist')->all());
 
-        if(array_key_exists('watchlist', $data)){
-            $user->watchlist()->sync($data['watchlist']);
+        if (array_key_exists('watchlist', $data)) {
+            foreach ($data['watchlist'] as $movieId) {
+                $user->watchlist()->firstOrCreate(['movie_id' => $movieId]);
+            }
         }
 
         return new UserFullResource($user->fresh('watchlist'));
@@ -65,7 +67,7 @@ class UserController extends Controller
     public function me(Request $request){
         $user = $request->user();
 
-        $user->load('achievements', 'watchlist', 'comments', 'poster', 'bookings');
+        $user->load('achievements', 'watchlist.movie.poster', 'comments', 'poster', 'bookings');
 
         return new UserFullResource($user);
     }
@@ -75,8 +77,10 @@ class UserController extends Controller
 
         $user->update(collect($data)->except('watchlist')->all());
 
-        if(array_key_exists('watchlist', $data)){
-            $user->watchlist()->sync($data['watchlist']);
+        if (array_key_exists('watchlist', $data)) {
+            foreach ($data['watchlist'] as $movieId) {
+                $user->watchlist()->firstOrCreate(['movie_id' => $movieId]);
+            }
         }
 
         // if($request->has('external_url')){
@@ -89,7 +93,7 @@ class UserController extends Controller
         }    
 
         
-        $user->load('poster', 'achievements', 'watchlist', 'comments');
+        $user->load('poster', 'achievements', 'watchlist.movie.poster', 'comments');
         return new UserFullResource($user);
     }
 
