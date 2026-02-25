@@ -31,7 +31,6 @@ class UpdateUserRequest extends FormRequest
             'watchlist' => 'sometimes|array',
             'watchlist.*' => 'integer|exists:movies,id',
             'avatar' => ['nullable', 'image', 'max:4096'],
-            'clear_avatar' => ['sometimes', 'boolean'], 
         ];
 
         if($isAdmin)

@@ -74,6 +74,7 @@ class UserController extends Controller
     public function updateMe(UpdateUserRequest $request, MediaService $mediaService){        
         $user = $request->user();
         $data = $request->validated();
+        $clearAvatar = array_key_exists('avatar', $data) && is_null($data['avatar']);
 
         $user->update(collect($data)->except(['watchlist', 'avatar'])->all());
 
@@ -83,7 +84,7 @@ class UserController extends Controller
             }
         }
 
-        if (!empty($data['clear_avatar'])) {
+        if ($clearAvatar) {
             $user->poster()->delete();
         } elseif ($request->hasFile('avatar')) {
             $mediaService->storeUploadedPoster($user, $request->file('avatar'));
