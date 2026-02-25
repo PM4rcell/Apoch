@@ -75,7 +75,7 @@ class UserController extends Controller
         $user = $request->user();
         $data = $request->validated();
 
-        $user->update(collect($data)->except('watchlist')->all());
+        $user->update(collect($data)->except(['watchlist', 'avatar'])->all());
 
         if (array_key_exists('watchlist', $data)) {
             foreach ($data['watchlist'] as $movieId) {
@@ -83,17 +83,14 @@ class UserController extends Controller
             }
         }
 
-        // if($request->has('external_url')){
-        //     $mediaService->storeExternalPoster($user, $request->input('external_url'));
-        // }
-        if (!empty($data['external_url'])) {
-            $mediaService->storeExternalPoster($user, $data['external_url']);
-        } elseif ($request->hasFile('poster_file')) {
-            $mediaService->storeUploadedPoster($user, $request->file('poster_file'));
-        }    
+        if (!empty($data['clear_avatar'])) {
+            $user->poster()->delete();
+        } elseif ($request->hasFile('avatar')) {
+            $mediaService->storeUploadedPoster($user, $request->file('avatar'));
+        }
 
-        
-        $user->load('poster', 'achievements', 'watchlist.movie.poster', 'comments');
+        // Refresh user from DB to get updated poster
+        $user = $user->fresh(['poster', 'achievements', 'watchlist.movie.poster', 'comments']);
         return new UserFullResource($user);
     }
 

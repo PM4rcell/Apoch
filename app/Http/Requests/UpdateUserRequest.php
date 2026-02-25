@@ -29,9 +29,9 @@ class UpdateUserRequest extends FormRequest
             'username' => 'sometimes|string|max:255',
             'email'    => 'sometimes|email|max:255|unique:users,email,' . $targetId, 
             'watchlist' => 'sometimes|array',
-            'watchlist.*' => 'integer|exists:movies,id',            
-            'external_url' => ['nullable', 'url'],
-            'poster_file'     => ['nullable', 'image', 'max:4096'], 
+            'watchlist.*' => 'integer|exists:movies,id',
+            'avatar' => ['nullable', 'image', 'max:4096'],
+            'clear_avatar' => ['sometimes', 'boolean'], 
         ];
 
         if($isAdmin)

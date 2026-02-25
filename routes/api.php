@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // Profile
     Route::get('/user/me', [UserController::class, 'me']);
     Route::patch('/user/me', [UserController::class, 'updateMe']);
+    Route::post('/user/me', [UserController::class, 'updateMe']); // For file uploads
     // Comment
     Route::post('/movies/{movie}/comments', [CommentController::class, 'store']);
 });
