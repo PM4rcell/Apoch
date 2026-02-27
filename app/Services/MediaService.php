@@ -31,7 +31,7 @@ class MediaService
         $originalName = $uploadedFile->getClientOriginalName();
         $sanitizedName = preg_replace('/[^a-zA-Z0-9-_\.]/', '_',
         pathinfo($originalName, PATHINFO_FILENAME));
-        $extension = $uploadedFile->getClientOriginalExtension();
+        $extension = $uploadedFile->extension();
         $safeName = $sanitizedName . '_' . uniqid() . '.' . $extension;
 
         $path = $uploadedFile->storeAs('images/'. $this->getTableFolder($model), $safeName, 'public');
@@ -56,7 +56,7 @@ class MediaService
         $originalName = $uploadedFile->getClientOriginalName();
         $sanitizedName = preg_replace('/[^a-zA-Z0-9-_\.]/', '_',
         pathinfo($originalName, PATHINFO_FILENAME));
-        $extension = $uploadedFile->getClientOriginalExtension();
+        $extension = $uploadedFile->extension();
         $safeName = $sanitizedName . '_' . uniqid() . '.' . $extension;
 
         $path = $uploadedFile->storeAs('images/'. $this->getTableFolder($model), $safeName, 'public');
@@ -81,12 +81,12 @@ class MediaService
     private function getPosterText($model, string $extension): string
     {
         $name = $model->slug ?? $model->name ?? $model->title ?? 'Item';
-        return $name . ' Poster.' . $extension;
+        return $name . '_poster.' . $extension;
     }
 
-    private function getMediaText($model, string $extension, string $type = 'Image'): string
+    private function getMediaText($model, string $extension, string $type = 'image'): string
     {
         $name = $model->slug ?? $model->name ?? $model->title ?? 'Item';
-        return $name . ' ' . $type . '.' . $extension;
+        return $name . '_' . $type . '.' . $extension;
     }
 }

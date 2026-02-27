@@ -30,8 +30,18 @@ class UpdateNewsRequest extends FormRequest
             'read_time_min' => 'required|integer|min:1',
             'external_link' => 'nullable|url',   
 
-            'external_poster_url' => 'nullable|url',
-            'poster_file' => 'nullable|image|max:4096'
+            'external_poster_url' => ['nullable','url',
+                function ($attribute, $value, $fail) {
+                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                        $fail('Only http/https URLs are allowed.');
+                    }
+            
+                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                        $fail('Local URLs are not allowed.');
+                    }
+                }
+            ],
+            'poster_file' => ['nullable','image','max:4096','mimes:jpg,jpeg,png,webp']
         ];
     }
 }

@@ -58,7 +58,7 @@ class Movie extends Model
     }
     public function genres()
     {
-        return $this->belongsToMany(Genre::class, 'movie_genres');
+        return $this->belongsToMany(Genre::class, 'movie_genres')->withTimestamps();
     }
     public function screenings()
     {

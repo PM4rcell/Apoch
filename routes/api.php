@@ -15,6 +15,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\ProfileWatchlistController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\ScreeningTypeController;
 use App\Http\Controllers\SeatController;
@@ -36,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::patch('/user/me', [UserController::class, 'updateMe']);
     // Comment
     Route::post('/movies/{movie}/comments', [CommentController::class, 'store']);
+    // Watchlist
+    Route::post('/movies/{movie}/watchlist', [ProfileWatchlistController::class, 'store']);
+    Route::delete('/profileWatchlists/{profileWatchlist}', [ProfileWatchlistController::class, 'destroy']);
 });
 
 //// Public routes ////
@@ -125,6 +129,8 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('comments', CommentController::class)->except(['store']);
     // Bookings
     Route::apiResource('bookings', BookingController::class);
+    // WatchList Items
+    Route::apiResource('profileWatchlists', ProfileWatchlistController::class)->only("index");
 });
 
 require __DIR__.'/auth.php';

@@ -16,8 +16,11 @@ use App\Models\MovieCast;
 use App\Models\MovieGenre;
 use App\Services\MediaService;
 use GuzzleHttp\Psr7\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Psy\Util\Str;
 use Symfony\Component\HttpFoundation\Request;
+
+use function Psy\debug;
 
 class MovieController extends Controller
 {
@@ -53,6 +56,14 @@ class MovieController extends Controller
         //validate
         $data = $request->validated();        
 
+        // DEBUG: Log ALL files and data
+        Log::info('=== REQUEST DEBUG ===');
+        Log::info('All data before validation:', $request->all());
+        // Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
+        Log::info('All data after validation:', $request->validated());
+        // Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
+        Log::info('===================');
+
         //find or create director
         if (isset($data['director'])) {
             $director = Director::firstOrCreate([
@@ -79,8 +90,8 @@ class MovieController extends Controller
 
         //find or create genres, cast
         $genreIds = [];
-        foreach ($data['genres'] as $genre) {
-            $genre = Genre::firstOrCreate(['name' => $genre]);
+        foreach ($data['genres'] as $genreId) {            
+            $genre = Genre::findOrFail((int) $genreId);            
             $genreIds[] = $genre->id;
         }
         $movie->genres()->sync($genreIds);
@@ -99,21 +110,28 @@ class MovieController extends Controller
             $mediaService->storeUploadedPoster($movie, $request->file('poster_file'));
         }        
 
-        //store images
-        $gallery = $request->input('gallery', []);
-        $galleryFiles = $request->file('gallery', []);
-
-        foreach ($gallery as $index => $item) {
-            if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
-                $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
-                continue;
-            }
-
-            if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
-                $mediaService->storeExternalMedia($movie, $item);
-                continue;
+        //store gallery images        
+        if ($request->hasFile('gallery_files')) {
+            foreach ($request->file('gallery_files') as $file) {
+                $mediaService->storeUploadedMedia($movie, $file);
             }
         }
+        if(isset($data['gallery_urls'])){
+            foreach ($request->input('gallery_urls', []) as $url) {
+                $mediaService->storeExternalMedia($movie, $url);
+            }   
+        }                
+        // foreach ($gallery as $index => $item) {
+        //     if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
+        //         $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
+        //         continue;
+        //     }
+
+        //     if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
+        //         $mediaService->storeExternalMedia($movie, $item);
+        //         continue;
+        //     }
+        // }
 
         //return movie
         $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']);
@@ -135,10 +153,18 @@ class MovieController extends Controller
     public function update(UpdateMovieRequest $request, Movie $movie, MediaService $mediaService)
     {                
         $data = $request->validated();         
-            
+             
         // $director = Director::firstOrCreate(['name' => $data['director'],]);
         // $data['director_id'] = $director->id;
         
+        // DEBUG: Log ALL files and data
+        Log::info('=== REQUEST DEBUG ===');
+        Log::info('All files:', $request->allFiles());
+        Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
+        Log::info('All data after validation:', $request->validated());
+        Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
+        Log::info('===================');
+
         $movie->update($data);
     
 
@@ -167,20 +193,16 @@ class MovieController extends Controller
         }
 
      //store images
-        $gallery = $request->input('gallery', []);
-        $galleryFiles = $request->file('gallery', []);
-
-        foreach ($gallery as $index => $item) {
-            if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
-                $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
-                continue;
-            }
-
-            if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
-                $mediaService->storeExternalMedia($movie, $item);
-                continue;
+        if ($request->hasFile('gallery_files')) {
+            foreach ($request->file('gallery_files') as $file) {
+                $mediaService->storeUploadedMedia($movie, $file);
             }
         }
+        if(isset($data['gallery_urls'])){
+            foreach ($request->input('gallery_urls', []) as $url) {
+                $mediaService->storeExternalMedia($movie, $url);
+            }   
+        }                
         
         return new MovieDetailResource($movie->fresh()->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']));
     }

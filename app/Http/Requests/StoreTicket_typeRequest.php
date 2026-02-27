@@ -28,8 +28,18 @@ class StoreTicket_typeRequest extends FormRequest
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
 
-            'poster' => 'nullable|image|max:4096|mimes:png,jpg,jpeg',
-            'external_url' => ['nullable', 'url', 'max:2048']
+            'poster' => 'nullable|image|max:4096|mimes:png,jpg,jpeg,webp',
+            'external_url' => ['nullable', 'url', 'mimes:jpg,jpeg,png,webp',
+                function ($attribute, $value, $fail) {
+                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                        $fail('Only http/https URLs are allowed.');
+                    }
+            
+                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                        $fail('Local URLs are not allowed.');
+                    }
+                }
+            ]
         ];
     }
 }

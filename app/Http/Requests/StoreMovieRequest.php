@@ -40,11 +40,33 @@ class StoreMovieRequest extends FormRequest
             'cast.*.name' => 'required|string|max:100',
             'cast.*.role' => 'required|string|max:100',
 
-            'external_url' => ['nullable', 'url'],
-            'poster_file'     => ['nullable', 'image', 'max:4096'], 
-
-            'gallery'   => ['nullable', 'array'],
-            'gallery.*' => ['image', 'max:4096'],
+            'external_url' => ['nullable', 'url',
+                function ($attribute, $value, $fail) {
+                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                        $fail('Only http/https URLs are allowed.');
+                    }
+            
+                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                        $fail('Local URLs are not allowed.');
+                    }
+                }
+            ],
+            'poster_file'     => ['nullable', 'image','mimes:jpg,jpeg,png,webp', 'max:4096'], 
+            
+            'gallery_files' => ["nullable", "array", 'max:10'],
+            'gallery_urls' => ["nullable", "array", 'max:10'],
+            'gallery_files.*' => ["image", 'max:4096', 'mimes:jpg,jpeg,png,webp',],
+            'gallery_urls.*' => ["url",
+                function ($attribute, $value, $fail) {
+                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                        $fail('Only http/https URLs are allowed.');
+                    }
+            
+                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                        $fail('Local URLs are not allowed.');
+                    }
+                }
+            ],
         ];
     }
 }
