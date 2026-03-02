@@ -30,8 +30,8 @@ class NewsController extends Controller
         $data['slug'] = Str::slug($data['title']);
         $news = News::create($data);
 
-        if(!empty($data['external_poster_url'])){
-            $mediaService->storeExternalPoster($news, $data['external_poster_url']);
+        if(!empty($data['external_url'])){
+            $mediaService->storeExternalPoster($news, $data['external_url']);
         }
         elseif($request->hasFile('poster_file')){
             $mediaService->storeUploadedPoster($news, $request->file('poster_file'));

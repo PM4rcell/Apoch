@@ -48,8 +48,8 @@ class ScreeningController extends Controller
     public function store(StoreScreeningRequest $request)
     {
         $data = $request->validated();
-        $language = Language::firstOrCreate(['name' => $data['language']]);
-        $data['language_id'] = $language->id;
+        // $language = Language::firstOrCreate(['name' => $data['language']]);
+        // $data['language_id'] = $language->id;
 
         $screening = Screening::create($data);
 

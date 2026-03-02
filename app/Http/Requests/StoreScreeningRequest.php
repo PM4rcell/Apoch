@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\NoOverlappingScreening;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreScreeningRequest extends FormRequest
@@ -24,8 +25,8 @@ class StoreScreeningRequest extends FormRequest
         return [
             'auditorium_id' => ['required', 'exists:auditoria,id'],
             'movie_id' => ['required', 'exists:movies,id'],
-            'language' => ['required', 'string', 'max:50'],
-            'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
+            'language_id' => ['required', 'exists:languages,id'],
+            'start_time' => ['required', 'date_format:Y-m-d H:i:s', new NoOverlappingScreening()],
             'screening_type_id' => ['required', 'integer', 'exists:screening_types,id']
         ];
     }

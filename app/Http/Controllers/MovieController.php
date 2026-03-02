@@ -158,22 +158,22 @@ class MovieController extends Controller
         // $data['director_id'] = $director->id;
         
         // DEBUG: Log ALL files and data
-        Log::info('=== REQUEST DEBUG ===');
-        Log::info('All files:', $request->allFiles());
-        Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
-        Log::info('All data after validation:', $request->validated());
-        Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
-        Log::info('===================');
+        // Log::info('=== REQUEST DEBUG ===');
+        // Log::info('All files:', $request->allFiles());
+        // Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
+        // Log::info('All data after validation:', $request->validated());
+        // Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
+        // Log::info('===================');
 
         $movie->update($data);
     
 
         //Update Genre Relations
         $genreIds = [];
-        foreach ($data['genres'] as $genreName) {
-            $genre = Genre::firstOrCreate(['name' => $genreName]);
-            $genreIds[] = $genre->id;        
-        }        
+        foreach ($data['genres'] as $genreId) {            
+            $genre = Genre::findOrFail((int) $genreId);            
+            $genreIds[] = $genre->id;
+        }
         $movie->genres()->sync($genreIds);
     
         //Update Casting Data

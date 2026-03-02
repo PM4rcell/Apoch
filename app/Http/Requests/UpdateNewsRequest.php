@@ -30,7 +30,7 @@ class UpdateNewsRequest extends FormRequest
             'read_time_min' => 'required|integer|min:1',
             'external_link' => 'nullable|url',   
 
-            'external_poster_url' => ['nullable','url',
+            'external_url' => ['nullable','url',
                 function ($attribute, $value, $fail) {
                     if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
                         $fail('Only http/https URLs are allowed.');
