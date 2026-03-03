@@ -46,8 +46,10 @@ class UserController extends Controller
 
         $user->update(collect($data)->except('watchlist')->all());
 
-        if(array_key_exists('watchlist', $data)){
-            $user->watchlist()->sync($data['watchlist']);
+        if (array_key_exists('watchlist', $data)) {
+            foreach ($data['watchlist'] as $movieId) {
+                $user->watchlist()->firstOrCreate(['movie_id' => $movieId]);
+            }
         }
 
         $user->load("watchlist.movie");
@@ -73,24 +75,24 @@ class UserController extends Controller
     public function updateMe(UpdateUserRequest $request, MediaService $mediaService){        
         $user = $request->user();
         $data = $request->validated();
+        $clearAvatar = array_key_exists('avatar', $data) && is_null($data['avatar']);
 
-        $user->update(collect($data)->except('watchlist')->all());
+        $user->update(collect($data)->except(['watchlist', 'avatar'])->all());
 
-        if(array_key_exists('watchlist', $data)){
-            $user->watchlist()->sync($data['watchlist']);
+        if (array_key_exists('watchlist', $data)) {
+            foreach ($data['watchlist'] as $movieId) {
+                $user->watchlist()->firstOrCreate(['movie_id' => $movieId]);
+            }
         }
 
-        // if($request->has('external_url')){
-        //     $mediaService->storeExternalPoster($user, $request->input('external_url'));
-        // }
-        if (!empty($data['external_url'])) {
-            $mediaService->storeExternalPoster($user, $data['external_url']);
-        } elseif ($request->hasFile('poster_file')) {
-            $mediaService->storeUploadedPoster($user, $request->file('poster_file'));
-        }    
+        if ($clearAvatar) {
+            $user->poster()->delete();
+        } elseif ($request->hasFile('avatar')) {
+            $mediaService->storeUploadedPoster($user, $request->file('avatar'));
+        }
 
-        
-        $user->load('poster', 'achievements', 'watchlist.movie', 'comments');
+        // Refresh user from DB to get updated poster
+        $user = $user->fresh(['poster', 'achievements', 'watchlist.movie.poster', 'comments']);
         return new UserFullResource($user);
     }
 

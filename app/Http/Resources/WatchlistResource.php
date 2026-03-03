@@ -17,7 +17,8 @@ class WatchlistResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserFullResource($this->whenLoaded('user')),
+            'user_id' => $this->user_id,
+            'movie_id' => $this->movie_id,
             'movie' => new MovieSummaryResource($this->whenLoaded('movie'))
         ];
     }
