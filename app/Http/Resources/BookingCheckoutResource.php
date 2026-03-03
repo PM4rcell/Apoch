@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class BookingCheckoutResource extends JsonResource
 {
@@ -16,7 +15,9 @@ class BookingCheckoutResource extends JsonResource
     public function toArray(Request $request): array
     {
         $bookingTickets = $this->resource->bookingTickets()->with('ticketType')->get();
-        $bookingSeats = $this->resource->bookingSeats()->with('seat')->get();     
+        $bookingSeats = $this->resource->bookingSeats()->with('seat')->get();
+        $moviePosterPath = $this->screening->movie->poster?->path;
+        $moviePosterUrl = $moviePosterPath ? asset('storage/' . ltrim($moviePosterPath, '/')) : null;
 
         return [
             'id' => $this->id,
@@ -26,7 +27,7 @@ class BookingCheckoutResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i'),
             'screening' => [
                 'movie_title' => $this->screening->movie->title,
-                'movie_poster' => $this->screening->movie->poster?->path,
+                'movie_poster' => $moviePosterUrl,
                 'date' => $this->screening->start_time->format('l, F j, Y'),
                 'time' => $this->screening->start_time->format('g:i A'),
                 'auditorium' => $this->screening->auditorium->name,
