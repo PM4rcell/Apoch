@@ -27,7 +27,6 @@ class UpdateTicket_typeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'unique:ticket_types,name',
                 Rule::unique('ticket_types', 'name')->ignore($this->ticketType)
             ],
             'price' => 'required|decimal:2|min:1',

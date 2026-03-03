@@ -79,8 +79,8 @@ class MovieController extends Controller
 
         //find or create genres, cast
         $genreIds = [];
-        foreach ($data['genres'] as $genre) {
-            $genre = Genre::firstOrCreate(['name' => $genre]);
+        foreach ($data['genres'] as $genreId) {            
+            $genre = Genre::findOrFail((int) $genreId);            
             $genreIds[] = $genre->id;
         }
         $movie->genres()->sync($genreIds);
@@ -144,10 +144,10 @@ class MovieController extends Controller
 
         //Update Genre Relations
         $genreIds = [];
-        foreach ($data['genres'] as $genreName) {
-            $genre = Genre::firstOrCreate(['name' => $genreName]);
-            $genreIds[] = $genre->id;        
-        }        
+        foreach ($data['genres'] as $genreId) {            
+            $genre = Genre::findOrFail((int) $genreId);            
+            $genreIds[] = $genre->id;
+        }
         $movie->genres()->sync($genreIds);
     
         //Update Casting Data

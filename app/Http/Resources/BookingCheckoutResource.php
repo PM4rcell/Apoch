@@ -26,7 +26,7 @@ class BookingCheckoutResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i'),
             'screening' => [
                 'movie_title' => $this->screening->movie->title,
-                'movie_poster' => $this->screening->movie->poster?->url,
+                'movie_poster' => $this->screening->movie->poster?->path,
                 'date' => $this->screening->start_time->format('l, F j, Y'),
                 'time' => $this->screening->start_time->format('g:i A'),
                 'auditorium' => $this->screening->auditorium->name,
