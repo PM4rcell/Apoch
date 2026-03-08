@@ -15,7 +15,7 @@ class ProfileWatchlistController extends Controller
      */
     public function index()
     {
-        $watchlisted = ProfileWatchlist::query()->with(['user', 'movie'])->paginate(15);
+        $watchlisted = ProfileWatchlist::query()->with(['user', 'movie'])->paginate(30);
         return WatchlistResource::collection($watchlisted);
     }
 

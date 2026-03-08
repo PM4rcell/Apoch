@@ -14,7 +14,7 @@ class BookingTicketController extends Controller
      */
     public function index()
     {
-        $tickets = BookingTicket::query()->with(['booking', 'ticketType'])->paginate(15);
+        $tickets = BookingTicket::query()->with(['booking', 'ticketType'])->paginate(30);
         return BookingTicketResource::collection($tickets);
     }
 

@@ -15,7 +15,7 @@ class ProductTypeController extends Controller
      */
     public function index()
     {
-        $productTypes = ProductType::query()->with('poster')->paginate(15);
+        $productTypes = ProductType::query()->with('poster')->paginate(30);
         return ProductTypeResource::collection($productTypes);
     }
 

@@ -45,7 +45,7 @@ class MovieController extends Controller
         }
         
         $movies->orderBy('release_date', 'desc');        
-        return MovieDetailResource::collection($movies->paginate(10));
+        return MovieDetailResource::collection($movies->paginate(30));
     }
 
     /**
@@ -143,7 +143,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres', 'comments.user.poster']);
+        $movie->load(['poster', 'gallery', 'director', 'era', 'cast.poster', 'genres', 'comments.user.poster']);
         return new MovieDetailResource($movie);
     }
 

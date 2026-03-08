@@ -15,7 +15,7 @@ class CastMemberController extends Controller
      */
     public function index()
     {
-        $castMembers = CastMember::query()->with('poster')->orderBy('name')->paginate(10);
+        $castMembers = CastMember::query()->with('poster')->orderBy('name')->paginate(30);
         return CastMemberResource::collection($castMembers);
     }
 
@@ -50,9 +50,17 @@ class CastMemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCast_memberRequest $request, CastMember $castMember)
+    public function update(UpdateCast_memberRequest $request, CastMember $castMember, MediaService $mediaService)
     {
-        $castMember->update($request->validated());
+        $data = $request->validated();
+        $castMember->update($data);
+
+        if (!empty($data['external_url'])) {
+            $mediaService->storeExternalPoster($castMember, $data['external_url']);
+        } elseif ($request->hasFile('poster_file')) {
+            $mediaService->storeUploadedPoster($castMember, $request->file('poster_file'));
+        }
+        
         $castMember->load('poster');
         return new CastMemberResource($castMember);
     }

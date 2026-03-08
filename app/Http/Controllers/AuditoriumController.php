@@ -15,7 +15,7 @@ class AuditoriumController extends Controller
      */
     public function index()
     {
-        $auditoriums = Auditorium::query()->with('cinema', 'seats', 'screenings')->paginate(15);
+        $auditoriums = Auditorium::query()->with('cinema', 'seats', 'screenings')->paginate(30);
         return AuditoriumResource::collection($auditoriums);
     }
 

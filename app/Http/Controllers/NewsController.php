@@ -16,7 +16,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::query()->with(['user', 'poster'])->latest()->paginate(15);
+        $news = News::query()->with(['user', 'poster'])->latest()->paginate(30);
         return NewsResource::collection($news);
     }
 

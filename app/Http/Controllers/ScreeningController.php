@@ -39,7 +39,7 @@ class ScreeningController extends Controller
             $date = request()->input("date", request()->input('start_date'));
             $screenings->whereDate("start_time", $date);
         }
-        return ScreeningResource::collection($screenings->paginate(10));
+        return ScreeningResource::collection($screenings->paginate(30));
     }
 
     /**

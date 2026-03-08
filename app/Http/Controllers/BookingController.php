@@ -28,7 +28,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::query()->with('user', 'screening', 'bookingTickets', 'bookingSeats.seat.seatType','bookingSeats.seat.auditorium')->paginate(15);
+        $bookings = Booking::query()->with('user', 'screening', 'bookingTickets', 'bookingSeats.seat.seatType','bookingSeats.seat.auditorium')->paginate(30);
         return BookingResource::collection($bookings);
     }
 

@@ -14,7 +14,7 @@ class SeatController extends Controller
      */
     public function index()
     {
-        $seats = Seat::query()->with(['auditorium', 'seatType'])->paginate(15);
+        $seats = Seat::query()->with(['auditorium', 'seatType'])->paginate(30);
         return SeatResource::collection($seats);
     }
 

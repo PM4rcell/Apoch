@@ -14,7 +14,7 @@ class CinemaController extends Controller
      */
     public function index()
     {
-        $cinemas = cinema::query()->with('era')->orderByDesc('name')->paginate(10);
+        $cinemas = cinema::query()->with('era')->orderByDesc('name')->paginate(30);
         return CinemaResource::collection($cinemas);
     }
 
