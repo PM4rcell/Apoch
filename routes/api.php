@@ -128,7 +128,7 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::apiResource('seatTypes', SeatTypeController::class)->except(['index', 'show']);
     Route::apiResource('seats', SeatController::class)->except(['index', 'show']);    
     // Comments
-    Route::apiResource('comments', CommentController::class)->except(['store']);
+    Route::apiResource('comments', CommentController::class)->except(['store', 'destroy']);
     // Bookings
     Route::apiResource('bookings', BookingController::class);
     // WatchList Items
