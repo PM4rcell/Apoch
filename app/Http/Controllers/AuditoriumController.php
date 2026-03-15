@@ -24,8 +24,18 @@ class AuditoriumController extends Controller
      */
     public function store(StoreAuditoriumRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->validated() + ['capacity' => 96];
         $auditorium = Auditorium::create($data);
+
+        for ($row = 1; $row <= 8; $row++) {
+            for ($col = 1; $col <= 12; $col++) {
+                $auditorium->seats()->create([
+                    'row' => $row,
+                    'number' => $col,
+                ]);
+            }
+        }
+
         $auditorium->load('cinema', 'seats', 'screenings');
         return new AuditoriumResource($auditorium);
     }

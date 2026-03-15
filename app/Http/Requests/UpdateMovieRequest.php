@@ -41,15 +41,15 @@ class UpdateMovieRequest extends FormRequest
             'cast.*.role' => 'required|string|max:100',
 
             'external_url' => ['nullable', 'url',
-                function ($attribute, $value, $fail) {
-                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
-                        $fail('Only http/https URLs are allowed.');
-                    }
+                // function ($attribute, $value, $fail) {
+                //     if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                //         $fail('Only http/https URLs are allowed.');
+                //     }
             
-                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
-                        $fail('Local URLs are not allowed.');
-                    }
-                }
+                //     if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                //         $fail('Local URLs are not allowed.');
+                //     }
+                // }
             ],
             'poster_file'     => ['nullable', 'image', 'max:4096'], 
 
@@ -57,15 +57,15 @@ class UpdateMovieRequest extends FormRequest
             'gallery_urls' => ["nullable", "array", 'max:10'],
             'gallery_files.*' => ["image", 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'gallery_urls.*' => ["url",
-                function ($attribute, $value, $fail) {
-                    if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
-                        $fail('Only http/https URLs are allowed.');
-                    }
+                // function ($attribute, $value, $fail) {
+                //     if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
+                //         $fail('Only http/https URLs are allowed.');
+                //     }
             
-                    if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
-                        $fail('Local URLs are not allowed.');
-                    }
-                }
+                //     if (preg_match('/^(https?:\/\/)(localhost|127\.0\.0\.1|10\.|192\.168\.)/i', $value)) {
+                //         $fail('Local URLs are not allowed.');
+                //     }
+                // }
             ],
         ];
     }

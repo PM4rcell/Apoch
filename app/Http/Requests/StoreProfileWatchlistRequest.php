@@ -11,7 +11,13 @@ class StoreProfileWatchlistRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->isAdmin();   
+        if($this->user()){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
     }
 
     /**

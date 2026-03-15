@@ -25,6 +25,17 @@ class ProfileWatchlistController extends Controller
     public function store(StoreProfileWatchlistRequest $request, Movie $movie)
     {
         $user = $request->user();
+         
+        $exists = $user->watchlist()
+            ->where('movie_id', $movie->id)
+            ->whereNull('deleted_at') 
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'Movie already in your watchlist'
+            ], 409);
+        }
 
         $watchlistItem = $user->watchlist()->create([
             'user_id' => $user->id,
@@ -56,7 +67,12 @@ class ProfileWatchlistController extends Controller
      */
     public function destroy(ProfileWatchlist $profileWatchlist)
     {
+        if ($profileWatchlist->user_id !== auth('sanctum')->id()) {
+        return response()->json(['msg' => 'Forbidden'], 403);
+        }
+
         $profileWatchlist->delete();
+
         return response()->noContent();
     }
 }

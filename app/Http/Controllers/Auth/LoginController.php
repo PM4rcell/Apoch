@@ -19,15 +19,35 @@ class LoginController extends Controller
         $request->authenticate();
         $user = $request->user();
 
-        $user->tokens()->where('name', 'main')->delete();
+        $remember = $request->boolean('remember', false); 
+        $tokenName = $remember ? 'main-remember' : 'main';
 
-        $token = $user->createToken('main')->plainTextToken;
+        $existingToken = $user->tokens()
+            ->where('name', $tokenName)
+            ->where(function ($query) {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })  
+            ->first()->plainTextToken;
+
+        if ($existingToken) {        
+            return [
+                'user' => new UserResource($user),
+                'token' => $existingToken,
+            ];
+        }
+    
+        $user->tokens()->where('name', 'main')->delete();
+        $user->tokens()->where('name', $remember ? 'main-remember' : 'main')->delete();        
+
+        $token = $user->createToken($tokenName, [], now()->addDays($remember ? 60 : 1))->plainTextToken;
 
         $user->update(['last_login_at' => now()]);
 
         return [
             'user' => new UserResource($user),
             'token' => $token,
+            'expires_at'  => now()->addDays($remember ? 365 : 30)
         ];
     }
 

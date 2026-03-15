@@ -24,7 +24,6 @@ class StoreAuditoriumRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'cinema_id' => 'required|exists:cinemas,id',
-            'capacity' => 'required|integer|min:1',
         ];
     }
 }
