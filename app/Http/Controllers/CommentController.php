@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Movie;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -60,8 +61,13 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Request $request)
     {
+        $commentId = $request->input('comment_id');
+        $comment = Comment::find($commentId);
+        if (!$comment) {
+            return response()->json(['error' => 'Comment not found'], 404);
+        }
         $comment->delete();
         return response()->noContent();
     }
