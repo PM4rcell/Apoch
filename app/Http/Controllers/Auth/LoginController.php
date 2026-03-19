@@ -17,38 +17,15 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
+        $request->session()->regenerate();
+
         $user = $request->user();
-
-        $remember = $request->boolean('remember', false); 
-        $tokenName = $remember ? 'main-remember' : 'main';
-
-        $existingToken = $user->tokens()
-            ->where('name', $tokenName)
-            ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
-            })  
-            ->first()->plainTextToken;
-
-        if ($existingToken) {        
-            return [
-                'user' => new UserResource($user),
-                'token' => $existingToken,
-            ];
-        }
-    
-        $user->tokens()->where('name', 'main')->delete();
-        $user->tokens()->where('name', $remember ? 'main-remember' : 'main')->delete();        
-
-        $token = $user->createToken($tokenName, [], now()->addDays($remember ? 60 : 1))->plainTextToken;
 
         $user->update(['last_login_at' => now()]);
 
-        return [
+        return response([
             'user' => new UserResource($user),
-            'token' => $token,
-            'expires_at'  => now()->addDays($remember ? 365 : 30)
-        ];
+        ]);
     }
 
     /**
@@ -56,10 +33,10 @@ class LoginController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $user = $request->user();
-        $user->tokens()
-            ->where('id', $user->currentAccessToken()->id)
-            ->delete();        
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->noContent();
     }
