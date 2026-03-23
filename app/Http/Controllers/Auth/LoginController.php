@@ -16,7 +16,7 @@ class LoginController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        $request->authenticate();        
         $user = $request->user();        
         $device = $this->makeDeviceIdentifier();
 
@@ -30,10 +30,16 @@ class LoginController extends Controller
 
         $user->update(['last_login_at' => now()]);
 
+        if(!str_contains($device, "maui")){
+            $request->session()->regenerate();
+                return response([
+                'user' => new UserResource($user),
+            ]);     
+        }                
         return [
             'user' => new UserResource($user),            
             'token' => $token->plainTextToken,
-        ];
+        ];        
     }
 
     protected function makeDeviceIdentifier(){
@@ -89,10 +95,10 @@ class LoginController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $user = $request->user();
-        $user->tokens()
-            ->where('id', $user->currentAccessToken()->id)
-            ->delete();        
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->noContent();
     }
