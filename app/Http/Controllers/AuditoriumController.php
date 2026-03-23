@@ -31,7 +31,8 @@ class AuditoriumController extends Controller
             for ($col = 1; $col <= 12; $col++) {
                 $auditorium->seats()->create([
                     'row' => $row,
-                    'number' => $col,
+                    'number' => $col,                    
+                    'seat_type_id' => 1
                 ]);
             }
         }

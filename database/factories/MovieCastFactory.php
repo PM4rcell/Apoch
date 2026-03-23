@@ -22,6 +22,7 @@ class MovieCastFactory extends Factory
         return [
             'movie_id' => Movie::query()->inRandomOrder()->first()->id,
             'cast_member_id' => CastMember::query()->inRandomOrder()->first()->id,
+            'role' => fake()->name()
         ];
     }
 }

@@ -17,38 +17,71 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-        $user = $request->user();
+        $user = $request->user();        
+        $device = $this->makeDeviceIdentifier();
 
-        $remember = $request->boolean('remember', false); 
-        $tokenName = $remember ? 'main-remember' : 'main';
+        $user->tokens()
+            ->where('name', 'main')
+            ->where('device', $device)
+            ->delete();
 
-        $existingToken = $user->tokens()
-            ->where('name', $tokenName)
-            ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
-            })  
-            ->first()->plainTextToken;
-
-        if ($existingToken) {        
-            return [
-                'user' => new UserResource($user),
-                'token' => $existingToken,
-            ];
-        }
-    
-        $user->tokens()->where('name', 'main')->delete();
-        $user->tokens()->where('name', $remember ? 'main-remember' : 'main')->delete();        
-
-        $token = $user->createToken($tokenName, [], now()->addDays($remember ? 60 : 1))->plainTextToken;
+        $token = $user->createToken('main');        
+        $token->accessToken->forceFill(['device' => $device])->save();
 
         $user->update(['last_login_at' => now()]);
 
         return [
-            'user' => new UserResource($user),
-            'token' => $token,
-            'expires_at'  => now()->addDays($remember ? 365 : 30)
+            'user' => new UserResource($user),            
+            'token' => $token->plainTextToken,
         ];
+    }
+
+    protected function makeDeviceIdentifier(){
+        
+        $ua = request()->userAgent();
+        $app = request()->header('X-App');
+        $ip = request()->ip();
+
+        $client = $app === "maui" ? 'maui' : 'web';
+
+        if(str_contains($ua, 'Windows')){
+            $platform = 'Win';
+        } 
+        elseif(str_contains($ua, 'Android')){
+            $platform = 'Android';
+        } 
+        elseif(str_contains($ua, 'iPhone') || str_contains($ua, 'iOS')){
+            $platform = 'iOS';
+        } 
+        elseif(str_contains($ua, 'Mac')){
+            $platform = 'MacOS';
+        } 
+        elseif(str_contains($ua, 'Linux')){
+            $platform = 'Linux';
+        } 
+        else{
+            $platform = 'Unknown';
+        } 
+
+        if($client === 'maui'){
+            $browser = 'MAUI';
+        }
+        elseif(str_contains($ua, 'Chrome')){
+            $browser = 'Chrome';
+        }
+        elseif(str_contains($ua, 'FireFox')){
+            $browser = 'FireFox';
+        }
+        elseif(str_contains($ua, 'Safari')){
+            $browser = 'Safari';
+        }
+        else{
+            $browser = 'Other';
+        }
+
+        $hashedIp = substr(hash('sha256', $ip), 0, 8);
+
+        return "$client:$platform:-$browser-$hashedIp";
     }
 
     /**
