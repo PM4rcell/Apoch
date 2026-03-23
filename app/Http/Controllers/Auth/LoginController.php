@@ -30,10 +30,28 @@ class LoginController extends Controller
 
         $user->update(['last_login_at' => now()]);
 
-        return [
-            'user' => new UserResource($user),            
-            'token' => $token->plainTextToken,
-        ];
+        if(str_contains($device, 'maui')){
+            return [
+                'user' => new UserResource($user),            
+                'token' => $token->plainTextToken,
+            ];
+        }   
+        
+        return response([
+            'user' => new UserResource($user),
+        ])->cookie(
+            cookie(
+            name: 'auth_token',
+            value: $token,
+            minutes: 60 * 24 * 30,      
+            path: '/',
+            domain: null,               
+            secure: true,               
+            httpOnly: true,
+            sameSite: 'lax',            
+    )
+);
+        
     }
 
     protected function makeDeviceIdentifier(){
