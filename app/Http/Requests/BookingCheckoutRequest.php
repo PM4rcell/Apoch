@@ -11,7 +11,7 @@ class BookingCheckoutRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -21,8 +21,6 @@ class BookingCheckoutRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'email' => 'nullable|email'
-        ];
+        return [];
     }
 }

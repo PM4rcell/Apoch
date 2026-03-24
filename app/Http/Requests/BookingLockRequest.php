@@ -11,7 +11,7 @@ class BookingLockRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -26,8 +26,7 @@ class BookingLockRequest extends FormRequest
             "seat_ids" => 'required|array|min:1',
             "seat_ids.*" => 'integer|exists:seats,id',            
             "ticket_type_id" => 'required|exists:ticket_types,id',
-            "customer.mode" => 'required|in:user,guest',
-            'customer.email' => 'required_if:customer.mode,guest|email',            
+            "customer.mode" => 'required|in:user',
         ];
     }
 }

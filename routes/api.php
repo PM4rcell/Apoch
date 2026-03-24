@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 //// User Routes ////
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('sanctum.cookie')->group(function() {
     // Profile
     Route::get('/user/me', [UserController::class, 'me']);
     Route::patch('/user/me', [UserController::class, 'updateMe']);
@@ -82,15 +82,17 @@ route::apiResource('seats', SeatController::class)->only(['index', 'show']);
 // Booking
 Route::get('/screenings/{screening}/seats', [SeatMapController::class, 'index']);
 
-Route::post('/bookings/lock', [BookingController::class, 'lockSeats']);
-Route::put('/bookings/{booking}/seats', [BookingController::class, 'updateSeats']);
-Route::post('/bookings/{booking}/checkout', [BookingController::class, 'checkout']);
-Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+Route::middleware('sanctum.cookie')->group(function () {
+    Route::post('/bookings/lock', [BookingController::class, 'lockSeats']);
+    Route::put('/bookings/{booking}/seats', [BookingController::class, 'updateSeats']);
+    Route::post('/bookings/{booking}/checkout', [BookingController::class, 'checkout']);
+    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+});
 
 
 //// Admin routes ////
 
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
+Route::middleware('sanctum.cookie')->prefix('admin')->group(function () {
     // Eras
     Route::apiResource('eras', EraController::class)->except(['index', 'show']);    
     // Cinemas

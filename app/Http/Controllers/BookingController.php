@@ -78,16 +78,9 @@ class BookingController extends Controller
         $screening = Screening::findOrFail($data['screening_id']);
         $seatIds = $data["seat_ids"];
 
-        $userId = null;
-        $email = null;
-        if($data['customer']['mode'] !== 'guest'){
-            $userId = $request->user()->id ?? auth('sanctum')->user()->id;
-        }
-        else{
-            $email = $data['customer']['email'] ?? null;
-        }
+        $userId = $request->user()->id;
 
-        return DB::transaction(function() use ($request, $screening, $data, $seatIds, $userId, $email) {
+        return DB::transaction(function() use ($screening, $data, $seatIds, $userId) {
             $seats = Seat::where('auditorium_id', $screening->auditorium_id)
                         ->whereIn('id', $seatIds)
                         ->lockForUpdate()
@@ -95,13 +88,8 @@ class BookingController extends Controller
 
             $candidateQuery = Booking::where('screening_id', $screening->id)
                 ->where('status', 'pending')
-                ->where('created_at', '>', now()->subMinutes(10));
-
-            if ($userId) {
-                $candidateQuery->where('user_id', $userId);
-            } elseif ($email) {
-                $candidateQuery->where('email', $email);
-            }
+                ->where('created_at', '>', now()->subMinutes(10))
+                ->where('user_id', $userId);
 
             $candidateQuery->whereHas('bookingSeats', function($q) use ($seatIds) {
                 $q->whereIn('seat_id', $seatIds);
@@ -132,15 +120,9 @@ class BookingController extends Controller
             $bookingData = [
                 'screening_id' => $screening->id,
                 'booking_fee' => 0,
-                'status' => 'pending'
+                'status' => 'pending',
+                'user_id' => $userId,
             ];
-
-            if($data['customer']['mode'] === 'guest'){
-                $bookingData['email'] = $data['customer']['email'];                
-            }
-            else{
-                $bookingData['user_id'] = $userId;                
-            }
 
             $booking = Booking::create($bookingData);
 
@@ -168,13 +150,8 @@ class BookingController extends Controller
         //
     }
     public function checkout(BookingCheckoutRequest $request, Booking $booking){
-        if($booking->user_id){
-            $userId = $request->user()->id ?? auth('sanctum')->user()->id;            
-            abort_unless($userId === $booking->user_id, 403);
-        }
-        else{
-            abort_unless($request->email === $booking->email, 403);
-        }
+        $userId = $request->user()->id;
+        abort_unless($userId === $booking->user_id, 403);
 
         abort_if($booking->status !== 'pending', 400, "Booking already processed!");
 
@@ -203,8 +180,8 @@ class BookingController extends Controller
                 'price' => $ticket->ticketType->price,
             ];
         })->values();
-        $user = $booking->user_id ? auth('sanctum')->user() ?? $request->user() : null;
-        $email = $user?->email ?? $request->email;  // Nullsafe operator prevents crash
+        $user = $request->user();
+        $email = $user?->email;
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) 
         {
             Log::warning("No valid email for booking {$booking->id}");        
@@ -215,6 +192,8 @@ class BookingController extends Controller
         return (new BookingCheckoutResource($booking));
     }
     public function cancel(Booking $booking){
+        abort_unless(request()->user()?->id === $booking->user_id, 403);
+
         if($booking->status !== 'pending'){
             abort(400,'Only Pending Bookings Can Be Cancelled.');
         }
