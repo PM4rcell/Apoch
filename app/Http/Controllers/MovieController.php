@@ -193,6 +193,8 @@ class MovieController extends Controller
         }
 
      //store images
+        $movie->gallery()->delete();
+
         if ($request->hasFile('gallery_files')) {
             foreach ($request->file('gallery_files') as $file) {
                 $mediaService->storeUploadedMedia($movie, $file);
