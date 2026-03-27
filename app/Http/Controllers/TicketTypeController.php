@@ -15,7 +15,7 @@ class TicketTypeController extends Controller
      */
     public function index()
     {
-        $ticketTypes = TicketType::query()->with('poster')->get();
+        $ticketTypes = TicketType::query()->with('poster')->paginate(30);
         return TicketTypeResource::collection($ticketTypes);
     }
 

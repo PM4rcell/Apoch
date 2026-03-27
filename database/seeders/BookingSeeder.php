@@ -13,9 +13,6 @@ class BookingSeeder extends Seeder
      */
     public function run(): void
     {
-        Booking::factory(9)->create();
-        Booking::factory()->create([            
-            'email' => fake()->email(),
-        ]);
+        Booking::factory(10)->create();        
     }
 }

@@ -19,6 +19,6 @@ class TicketTypeSeeder extends Seeder
         ]);
         TicketType::factory()->create([
             "name" => "Student"
-        ]);
+        ]);        
     }
 }

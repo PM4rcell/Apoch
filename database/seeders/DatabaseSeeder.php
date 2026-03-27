@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             EraSeeder::class,
             PasswordSeeder::class,
             UserSeeder::class,
+            SeatTypeSeeder::class,
             CinemaSeeder::class,
             AuditoriumSeeder::class,
             DirectorSeeder::class,

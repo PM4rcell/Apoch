@@ -14,7 +14,7 @@ class SeatTypeController extends Controller
      */
     public function index()
     {
-        $seatTypes = SeatType::all();
+        $seatTypes = SeatType::paginate(30);
         return SeatTypeResource::collection($seatTypes);
     }
 

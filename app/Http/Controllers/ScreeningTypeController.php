@@ -14,7 +14,7 @@ class ScreeningTypeController extends Controller
      */
     public function index()
     {
-        $screeningTypes = ScreeningType::all();
+        $screeningTypes = ScreeningType::paginate(30);
         return ScreeningTypeResource::collection($screeningTypes);
     }
 

@@ -18,6 +18,6 @@ class LanguageSeeder extends Seeder
         ]);
         Language::factory()->create([
             'name' => 'Magyar',            
-        ]);
+        ]);        
     }
 }

@@ -21,7 +21,7 @@ class SeatFactory extends Factory
     {
         return [
             'auditorium_id' => Auditorium::query()->inRandomOrder()->first()->id,
-            'seat_type_id' => SeatType::factory(),
+            'seat_type_id' => SeatType::query()->inRandomOrder()->first()->id,
             'number' => fake()->numberBetween(1, 20),
             'row' => fake()->numberBetween(1, 14),
         ];

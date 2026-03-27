@@ -14,7 +14,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        $genres = Genre::all();
+        $genres = Genre::paginate(30);
         return GenreResource::collection($genres);
     }
 

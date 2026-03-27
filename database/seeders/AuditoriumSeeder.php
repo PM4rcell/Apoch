@@ -16,7 +16,7 @@ class AuditoriumSeeder extends Seeder
      */
     public function run(): void
     {
-        $auditoria = Auditorium::factory(5)->create([
+        $auditoria = Auditorium::factory(10)->create([
             "capacity" => 96
         ]);
 
