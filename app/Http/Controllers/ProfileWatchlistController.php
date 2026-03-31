@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProfileWatchlistRequest;
 use App\Http\Requests\UpdateProfileWatchlistRequest;
 use App\Http\Resources\WatchlistResource;
 use App\Models\Movie;
+use Illuminate\Http\Request;
 
 class ProfileWatchlistController extends Controller
 {
@@ -65,9 +66,9 @@ class ProfileWatchlistController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProfileWatchlist $profileWatchlist)
+    public function destroy(Request $request, ProfileWatchlist $profileWatchlist)
     {
-        if ($profileWatchlist->user_id !== auth('sanctum')->id()) {
+        if ($profileWatchlist->user_id !== $request->user()?->id) {
         return response()->json(['msg' => 'Forbidden'], 403);
         }
 
