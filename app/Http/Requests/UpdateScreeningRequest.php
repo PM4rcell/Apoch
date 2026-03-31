@@ -24,7 +24,7 @@ class UpdateScreeningRequest extends FormRequest
         return [
             'auditorium_id' => ['sometimes', 'exists:auditoria,id'],
             'movie_id' => ['sometimes', 'exists:movies,id'],
-            'language' => ['sometimes', 'string', 'max:50'],
+            'language_id' => ['sometimes', 'string', 'max:50'],
             'start_time' => ['sometimes', 'date_format:Y-m-d H:i:s'],            
             'screening_type_id' => ['required', 'integer', 'exists:screening_types,id']
         ];

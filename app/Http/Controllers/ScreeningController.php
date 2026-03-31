@@ -83,9 +83,9 @@ class ScreeningController extends Controller
     {
         $data = $request->validated();
         
-        $language = Language::firstOrCreate(['name' => $data['language']]);
-        $data['language_id'] = $language->id;
-        unset($data['language']);
+        // $language = Language::firstOrCreate(['name' => $data['language']]);
+        // $data['language_id'] = $language->id;
+        // unset($data['language']);
 
         $screening->update($data);        
         

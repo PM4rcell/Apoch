@@ -51,7 +51,7 @@ class EraController extends Controller
      */
     public function update(UpdateEraRequest $request, Era $era, MediaService $mediaService)
     {
-        $data = $request->validated;
+        $data = $request->validated();
         $era->update($data);
 
         if(!empty($data['external_poster_url'])){
