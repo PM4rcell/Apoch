@@ -58,7 +58,7 @@ class NewsController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
 
-        $news->update($request->validated());
+        $news->update($data);
 
         if(!empty($data['external_url'])){
             $mediaService->storeExternalPoster($news, $data['external_url']);

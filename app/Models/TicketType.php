@@ -25,11 +25,11 @@ class TicketType extends Model
         'point_price' => 'integer'
         ];
 
-    public function poster(){
+    // public function poster(){
 
-        return $this->morphOne(Media::class, 'connected')
-        ->where('media_type', 'poster');
-    }
+    //     return $this->morphOne(Media::class, 'connected')
+    //     ->where('media_type', 'poster');
+    // }
 
     public function bookings()
     {

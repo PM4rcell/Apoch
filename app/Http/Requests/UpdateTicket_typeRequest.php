@@ -29,13 +29,13 @@ class UpdateTicket_typeRequest extends FormRequest
                 'max:255',
                 Rule::unique('ticket_types', 'name')->ignore($this->ticketType)
             ],
-            'price' => 'required|decimal:2|min:1',
+            'price' => 'required|numeric|min:0|max:9999.99',
             'point_price' => 'required|int|min:1',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
 
-            'poster' => 'sometimes|img|max:4096|mimes:png,jpg,jpeg',
-            'external_url' => ['sometimes', 'url', 
+            // 'poster' => 'sometimes|img|max:4096|mimes:png,jpg,jpeg',
+            // 'external_url' => ['sometimes', 'url', 
                 // function ($attribute, $value, $fail) {
                 //     if (! str_starts_with($value, 'http://') && ! str_starts_with($value, 'https://')) {
                 //         $fail('Only http/https URLs are allowed.');
@@ -45,7 +45,7 @@ class UpdateTicket_typeRequest extends FormRequest
                 //         $fail('Local URLs are not allowed.');
                 //     }
                 // }
-            ]
+            // ]
         ];
     }
 }

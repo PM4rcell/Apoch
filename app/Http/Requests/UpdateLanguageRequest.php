@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateLanguageRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateLanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:50',
+            'name' => ['required','string','max:50', Rule::unique('languages', 'name')->ignore($this->language)],
             'description' => 'required|string|max:255',
         ];
     }

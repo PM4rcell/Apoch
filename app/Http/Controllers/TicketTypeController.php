@@ -15,7 +15,7 @@ class TicketTypeController extends Controller
      */
     public function index()
     {
-        $ticketTypes = TicketType::query()->with('poster')->paginate(30);
+        $ticketTypes = TicketType::paginate(30);
         return TicketTypeResource::collection($ticketTypes);
     }
 
@@ -26,13 +26,7 @@ class TicketTypeController extends Controller
     {
         $data = $request->validated();
         $ticketType = TicketType::create($data);
-        if(!empty($data['external_url'])){
-            $mediaService->storeExternalPoster($ticketType, $data['external_url']);
-        }
-        elseif($request->hasFile('poster')){
-            $mediaService->storeUploadedPoster($ticketType, $request->file('poster'));
-        }
-        $ticketType->load('poster');
+                
         return new TicketTypeResource($ticketType);
     }
 
@@ -50,16 +44,8 @@ class TicketTypeController extends Controller
     public function update(UpdateTicket_typeRequest $request, TicketType $ticketType, MediaService $mediaService)
     {
         $data = $request->validated();
-        $ticketType->update($data);
-        
-         if(!empty($data['external_url'])){
-            $mediaService->storeExternalPoster($ticketType, $data['external_url']);
-        }
-        elseif($request->hasFile('poster')){
-            $mediaService->storeUploadedPoster($ticketType, $request->file('poster'));
-        }
+        $ticketType->update($data);        
 
-        $ticketType->load('poster');
         return new TicketTypeResource($ticketType);
     }
 

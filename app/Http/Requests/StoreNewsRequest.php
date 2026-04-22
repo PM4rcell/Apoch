@@ -23,7 +23,7 @@ class StoreNewsRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
+            'title' => ['required','string','max:255', 'unique:news,title'],
             'body' => 'required|string',
             'category' => 'required|string|max:100',
             'excerp' => 'required|string',
