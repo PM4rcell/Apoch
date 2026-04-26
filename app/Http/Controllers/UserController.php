@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load('achievements', 'comments','bookings', 'watchlist.movie');
+        $user->load('comments','bookings', 'watchlist.movie');
         return new UserFullResource($user);
     }
 
@@ -68,7 +68,7 @@ class UserController extends Controller
     public function me(Request $request){
         $user = $request->user();
 
-        $user->load('achievements', 'watchlist.user','watchlist.movie.poster' , 'comments', 'poster', 'bookings');
+        $user->load('watchlist.user','watchlist.movie.poster' , 'comments', 'poster', 'bookings');
 
         return new UserFullResource($user);
     }
@@ -92,7 +92,7 @@ class UserController extends Controller
         }
 
         // Refresh user from DB to get updated poster
-        $user = $user->fresh(['poster', 'achievements', 'watchlist.movie.poster', 'comments']);
+        $user = $user->fresh(['poster', 'watchlist.movie.poster', 'comments']);
         return new UserFullResource($user);
     }
 

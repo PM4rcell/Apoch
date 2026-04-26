@@ -19,7 +19,6 @@ class UserFullResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'role' => $this->role,
-            "points" => $this->points,
             'poster' => new PosterResource($this->whenLoaded('poster')),
             "achievements" => AchievementResource::collection($this->whenLoaded('achievements')),
             "watchlist" => WatchlistResource::collection($this->whenLoaded('watchlist')),

@@ -31,7 +31,6 @@ class UpdateProduct_typeRequest extends FormRequest
                 Rule::unique('product_types', 'name')->ignore($this->productType)
             ],
             'price' => 'required|numeric|min:1',
-            'point_price' => 'required|int|min:1',
             'era_id' => 'required|exists:eras,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',

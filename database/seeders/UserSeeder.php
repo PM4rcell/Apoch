@@ -27,7 +27,6 @@ class UserSeeder extends Seeder
             'email' => 'user@epoch.test',
             'password_id' => $password->id,            
             'role' => Role::USER,
-            'points' => 0,
             'last_login_at' => null
         ]);   
         

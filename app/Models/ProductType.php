@@ -15,7 +15,6 @@ class ProductType extends Model
     protected $fillable = [
         'name',
         'price',
-        'point_price',
         'era_id',
         'start_date',
         'end_date'

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('screening_types', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->float('priceMultiplier')->default(1.00);
+            $table->float('price_multiplier')->default(1.00);
             $table->timestamps();
             $table->softDeletes();
         });

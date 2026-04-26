@@ -41,7 +41,6 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password_id' => $password->id,
             'role' => 'user',
-            'points' => 0,
             'last_login_at' => null
 
         ]);

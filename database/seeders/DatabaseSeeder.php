@@ -40,11 +40,9 @@ class DatabaseSeeder extends Seeder
             TicketTypeSeeder::class,
             BookingTicketSeeder::class,
             ProductTypeSeeder::class,
-            BookingProductSeeder::class,
-            AchievementSeeder::class,
+            BookingProductSeeder::class,            
             CommentSeeder::class,
-            NewsSeeder::class,
-            ProfileAchievementSeeder::class,
+            NewsSeeder::class,            
             ProfileWatchlistSeeder::class,
             AdminUserSeeder::class
         ]);

@@ -23,7 +23,7 @@ class StoreScreeningTypeRequest extends FormRequest
     {
         return [
             "name" => ["required", "string", "max:255"],
-            "priceMultiplier" => ["required", "numeric"]
+            "price_multiplier" => ["required", "numeric"]
         ];
     }
 }

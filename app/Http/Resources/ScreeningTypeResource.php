@@ -17,7 +17,7 @@ class ScreeningTypeResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "priceMultiplier" => $this->priceMultiplier,
+            "price_multiplier" => $this->price_multiplier,
             "screenings" => ScreeningResource::collection($this->whenLoaded("screenings"))
         ];
     }

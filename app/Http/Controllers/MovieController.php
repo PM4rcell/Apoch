@@ -54,15 +54,7 @@ class MovieController extends Controller
     public function store(StoreMovieRequest $request, MediaService $mediaService)
     {
         //validate
-        $data = $request->validated();        
-
-        // DEBUG: Log ALL files and data
-        Log::info('=== REQUEST DEBUG ===');
-        Log::info('All data before validation:', $request->all());
-        // Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
-        Log::info('All data after validation:', $request->validated());
-        // Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
-        Log::info('===================');
+        $data = $request->validated();                
 
         //find or create director
         if (isset($data['director'])) {
@@ -120,18 +112,7 @@ class MovieController extends Controller
             foreach ($request->input('gallery_urls', []) as $url) {
                 $mediaService->storeExternalMedia($movie, $url);
             }   
-        }                
-        // foreach ($gallery as $index => $item) {
-        //     if(isset($galleryFiles[$index]) && $galleryFiles[$index] instanceof UploadedFile){
-        //         $mediaService->storeUploadedMedia($movie,$galleryFiles[$index]);
-        //         continue;
-        //     }
-
-        //     if(is_string($item) && filter_var($item, FILTER_VALIDATE_URL)){
-        //         $mediaService->storeExternalMedia($movie, $item);
-        //         continue;
-        //     }
-        // }
+        }       
 
         //return movie
         $movie->load(['poster', 'gallery', 'director', 'era', 'cast', 'genres']);
@@ -153,17 +134,6 @@ class MovieController extends Controller
     public function update(UpdateMovieRequest $request, Movie $movie, MediaService $mediaService)
     {                
         $data = $request->validated();         
-             
-        // $director = Director::firstOrCreate(['name' => $data['director'],]);
-        // $data['director_id'] = $director->id;
-        
-        // DEBUG: Log ALL files and data
-        // Log::info('=== REQUEST DEBUG ===');
-        // Log::info('All files:', $request->allFiles());
-        // Log::info('gallery_files files:', $request->file('gallery_files') ? $request->file('gallery_files')->toArray() : 'NONE');
-        // Log::info('All data after validation:', $request->validated());
-        // Log::info('Has gallery_files:', $request->hasFile('gallery_files'));
-        // Log::info('===================');
 
         $movie->update($data);
     

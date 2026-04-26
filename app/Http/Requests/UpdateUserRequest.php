@@ -33,11 +33,6 @@ class UpdateUserRequest extends FormRequest
             'avatar' => ['nullable', 'image', 'max:4096'],
         ];
 
-        if($isAdmin)
-        {
-            $rules['points'] = 'sometimes|integer|min:0';
-        }
-
         return $rules;
     }
 }

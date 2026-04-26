@@ -26,7 +26,6 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@epoch.test',
             'password_id' => $password->id,            
             'role' => Role::ADMIN,
-            'points' => 0,
             'last_login_at' => null
         ]);
 

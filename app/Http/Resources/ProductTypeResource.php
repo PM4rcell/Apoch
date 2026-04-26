@@ -18,7 +18,6 @@ class ProductTypeResource extends JsonResource
             'id' => $this->id,
             'name' =>$this->name,
             'price' => $this->price,
-            'point_price' => $this->point_price,
             'era_id' => new EraResource($this->whenLoaded('era')),
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,

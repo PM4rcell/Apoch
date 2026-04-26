@@ -15,14 +15,12 @@ class TicketType extends Model
     protected $fillable = [
         'name',
         'price',
-        'point_price',
         'start_date',
         'end_date'
     ];
 
     protected $casts = [
         'price' => 'float',
-        'point_price' => 'integer'
         ];
 
     // public function poster(){

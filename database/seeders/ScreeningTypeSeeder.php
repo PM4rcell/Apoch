@@ -15,15 +15,15 @@ class ScreeningTypeSeeder extends Seeder
     {
         ScreeningType::create([
             "name" => "2D",
-            "priceMultiplier" => 1.00
+            "price_multiplier" => 1.00
         ]);
         ScreeningType::create([
             "name" => "3D",
-            "priceMultiplier" => 1.30
+            "price_multiplier" => 1.30
         ]);
         ScreeningType::create([
             "name" => "4DX",
-            "priceMultiplier" => 2.00
+            "price_multiplier" => 2.00
         ]);
     }
 }

@@ -20,7 +20,6 @@ class ProductTypeFactory extends Factory
         return [
             'name' => fake()->word(),
             'price' => fake()->randomFloat(2, 5,100),
-            'point_price' => fake()->numberBetween(100, 5000),
             'era_id' => Era::query()->inRandomOrder()->first()->id,
             'start_date' => fake()->date(),
             'end_date' => fake()->date(),

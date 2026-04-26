@@ -19,7 +19,6 @@ class TicketTypeFactory extends Factory
         return [
             'name' => fake()->randomElement(['default', 'student']),
             'price' => fake()->randomFloat(2, 5, 30),
-            'point_price' => fake()->numberBetween(100, 10000),
             'start_date' => fake()->date(),
             'end_date' => fake()->date(),
         ];

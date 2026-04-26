@@ -13,11 +13,11 @@ class ScreeningType extends Model
 
     protected $fillable = [
         "name",
-        "priceMultiplier"
+        "price_multiplier"
     ];
 
     protected $casts = [
-        'priceMultiplier' => 'float',
+        'price_multiplier' => 'float',
     ];
 
     public function screenings(){

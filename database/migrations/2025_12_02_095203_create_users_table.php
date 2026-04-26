@@ -18,7 +18,6 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('password_id')->constrained('passwords')->cascadeOnDelete();
             $table->string('role');
-            $table->integer('points');
             $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

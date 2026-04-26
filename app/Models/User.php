@@ -28,7 +28,6 @@ class User extends Authenticatable
         'email',
         'password_id',
         'role',
-        'points',
         'last_login_at'
     ];
 
