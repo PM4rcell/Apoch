@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\MediaService;
 use Illuminate\Http\Request;
+use Symfony\Component\ErrorHandler\Debug;
 
 class UserController extends Controller
 {
@@ -76,6 +77,7 @@ class UserController extends Controller
         $user = $request->user();
         $data = $request->validated();
         $clearAvatar = array_key_exists('avatar', $data) && is_null($data['avatar']);
+        
 
         $user->update(collect($data)->except(['watchlist', 'avatar'])->all());
 

@@ -15,9 +15,6 @@ return new class extends Migration
             $table->id();            
             $table->string("password_hash");
             $table->string("password_token");
-            $table->string('old1')->nullable();
-            $table->string('old2')->nullable();
-            $table->string('old3')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

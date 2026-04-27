@@ -17,7 +17,18 @@ class BookingCheckoutResource extends JsonResource
         $bookingTickets = $this->resource->bookingTickets()->with('ticketType')->get();
         $bookingSeats = $this->resource->bookingSeats()->with('seat')->get();
         $moviePosterPath = $this->screening->movie->poster?->path;
-        $moviePosterUrl = $moviePosterPath ? asset('storage/' . ltrim($moviePosterPath, '/')) : null;
+        $moviePosterUrl = null;
+
+        if ($moviePosterPath) {
+            if (
+                str_starts_with($moviePosterPath, 'http://') ||
+                str_starts_with($moviePosterPath, 'https://')
+            ) {
+                $moviePosterUrl = $moviePosterPath;
+            } else {
+                $moviePosterUrl = asset('storage/' . ltrim($moviePosterPath, '/'));
+            }
+        }
 
         return [
             'id' => $this->id,
@@ -27,7 +38,7 @@ class BookingCheckoutResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i'),
             'screening' => [
                 'movie_title' => $this->screening->movie->title,
-                'movie_poster' => $moviePosterPath,
+                'movie_poster' => $moviePosterUrl,
                 'date' => $this->screening->start_time->format('l, F j, Y'),
                 'time' => $this->screening->start_time->format('g:i A'),
                 'auditorium' => $this->screening->auditorium->name,
