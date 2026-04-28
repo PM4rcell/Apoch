@@ -21,10 +21,10 @@ class BookingCheckoutRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'email' => 'email',
-            'name' => 'min:2',
-            'card_number' => [                
+        return [            
+            'name' => 'required|min:2',
+            'card_number' => [
+                'required',
                 function ($attribute, $value, $fail) {
                     $cleaned = preg_replace('/\D/', '', $value);
                     if (strlen($cleaned) !== 16) {
@@ -33,6 +33,7 @@ class BookingCheckoutRequest extends FormRequest
                 },
             ],
             'expiry' => [
+                'required',
                 'regex:/^\d{2}\/\d{2}$/',
                 function ($attribute, $value, $fail) {
                     [$month, $year] = explode('/', $value);
@@ -51,9 +52,9 @@ class BookingCheckoutRequest extends FormRequest
                     }
                 },
             ],
-            'cvc' => 'regex:/^\d{3,4}$/',
-            'country' => 'min:2',
-            'zip' => 'regex:/^[A-Za-z0-9\s-]{3,10}$/',
+            'cvc' => ['required', 'regex:/^\d{3,4}$/'],
+            'country' => 'required|min:2',
+            'zip' => ['required', 'regex:/^[A-Za-z0-9\s-]{3,10}$/'],
         ];
     }
 }
